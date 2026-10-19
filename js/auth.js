@@ -1,9 +1,7 @@
 // js/auth.js
 const Auth = {
-    // HM Login Logic
     loginHM: async function(enteredPin) {
         try {
-            // 1. Get School Setup Data
             const schoolDoc = await db.collection('schoolInfo').doc('main').get();
             
             if (!schoolDoc.exists) {
@@ -12,16 +10,13 @@ const Auth = {
 
             const schoolData = schoolDoc.data();
 
-            // 2. Check if HM PIN is already set
             if (!schoolData.hmPin) {
-                // First Time Setup: HM is setting the PIN
-                await db.collection('schoolInfo').doc('main').update({
-                    hmPin: enteredPin // In real world, hash this!
-                });
+                // First Time Setup
+                await db.collection('schoolInfo').doc('main').update({ hmPin: enteredPin });
                 this.setSession('headmaster', schoolData.hmName, 'HM');
                 return { success: true, message: "PIN సెట్ చేయబడింది!", firstLogin: true };
             } else {
-                // Normal Login: Verify PIN
+                // Normal Login
                 if (schoolData.hmPin === enteredPin) {
                     this.setSession('headmaster', schoolData.hmName, 'HM');
                     return { success: true, message: "లాగిన్ విజయవంతమైంది!" };
@@ -35,24 +30,16 @@ const Auth = {
         }
     },
 
-    // Session Management
     setSession: function(role, name, displayRole) {
-        const sessionData = {
-            role: role,
-            name: name,
-            displayRole: displayRole,
-            loginTime: new Date().getTime()
-        };
+        const sessionData = { role, name, displayRole, loginTime: new Date().getTime() };
         localStorage.setItem('dm_session', JSON.stringify(sessionData));
     },
 
-    // Logout Logic
     logout: function() {
         localStorage.removeItem('dm_session');
         window.location.href = 'index.html';
     },
 
-    // Check if logged in
     checkAuth: function(requiredRole) {
         const session = localStorage.getItem('dm_session');
         if (!session) {
