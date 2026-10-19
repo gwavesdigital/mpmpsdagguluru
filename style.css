@@ -343,3 +343,118 @@ body.not-logged-in .bottom-nav {
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
    }
+/* =========================================
+   10. PREMIUM LOGIN PAGE STYLES
+   ========================================= */
+.premium-card {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Dark mode shadow tweak */
+[data-theme="dark"] .premium-card {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.premium-card-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: -65px auto 20px auto; /* Pulls the icon up out of the card */
+  box-shadow: 0 10px 20px rgba(27, 94, 32, 0.3);
+  border: 4px solid var(--surface);
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.pin-input {
+  padding-left: 45px !important;
+  padding-right: 45px !important;
+  text-align: center;
+  font-size: 1.5rem !important;
+  letter-spacing: 8px !important;
+  font-weight: 700 !important;
+  height: 56px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  color: var(--text-main);
+  transition: all 0.3s ease;
+}
+
+.pin-input:focus {
+  background: var(--surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.1);
+}
+
+.toggle-pin-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.toggle-pin-btn:hover {
+  color: var(--primary);
+}
+
+.btn-glow {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border: none;
+  box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 6px 20px rgba(27, 94, 32, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Background Animation */
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Soft gradient background for the login page specifically */
+body.not-logged-in {
+  background: linear-gradient(180deg, var(--header-bg) 0%, var(--bg-color) 100%) !important;
+}
