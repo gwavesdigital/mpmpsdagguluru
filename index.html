@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MP MPS Dagguluru - Digital Manabadi</title>
+    <meta name="theme-color" content="#1B5E20">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Icons (FontAwesome for quick icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="not-logged-in">
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <img src="https://cdn-icons-png.flaticon.com/512/3976/3976625.png" alt="School Logo" class="splash-logo">
+        <h2>MP MPS Dagguluru</h2>
+        <p>Digital Manabadi</p>
+    </div>
+
+    <!-- App Container -->
+    <div class="app-container" id="app-container" style="display: none;">
+        
+        <!-- Dynamic Header (JS will load this) -->
+        <header id="app-header" class="app-header"></header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- School Title -->
+            <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: var(--space-md);">
+                <h1 style="color: var(--primary); font-size: 1.8rem; margin-bottom: 4px;">MP MPS Dagguluru</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Digital Manabadi Portal</p>
+            </div>
+
+            <!-- PWA Install Button (Hidden by default, shown if installable) -->
+            <button id="install-app-btn" class="btn btn-outline" style="margin-bottom: var(--space-lg); display: none;">
+                <i class="fas fa-download" style="margin-right: 8px;"></i> Install App
+            </button>
+
+            <!-- 5 Sections Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                
+                <!-- Headmaster -->
+                <a href="principal.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem;">Headmaster</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">ప్రిన్సిపాల్</p>
+                </a>
+
+                <!-- Teacher -->
+                <a href="teacher.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem;">Teacher</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">ఉపాధ్యాయుడు</p>
+                </a>
+
+                <!-- Cook -->
+                <a href="cook.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem;">Cook</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">వంటవాడు</p>
+                </a>
+
+                <!-- Parent -->
+                <a href="parent.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                    <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem;">Parent</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">తల్లిదండ్రులు</p>
+                </a>
+
+                <!-- Office (Coming Soon) -->
+                <a href="#" class="card" style="text-align: center; text-decoration: none; color: inherit; opacity: 0.7; grid-column: span 2;">
+                    <div style="font-size: 2rem; color: var(--text-muted); margin-bottom: var(--space-xs);">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem;">Office Section</h3>
+                    <p style="font-size: 0.8rem; color: var(--danger);">Coming Soon</p>
+                </a>
+            </div>
+
+            <!-- Settings (Theme / Font Toggle) -->
+            <div style="margin-top: var(--space-xl); display: flex; justify-content: center; gap: var(--space-md);">
+                <button class="btn btn-outline" onclick="UI.toggleTheme()" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">
+                    <i class="fas fa-moon" id="theme-icon"></i> Theme
+                </button>
+                <button class="btn btn-outline" onclick="UI.changeFontSize('increase')" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">A+</button>
+                <button class="btn btn-outline" onclick="UI.changeFontSize('decrease')" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">A-</button>
+            </div>
+
+        </main>
+
+        <!-- Dynamic Footer (JS will load this) -->
+        <footer id="app-footer" class="app-footer"></footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
