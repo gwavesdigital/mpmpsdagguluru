@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HM Dashboard - Digital Manabadi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body> <!-- not-logged-in క్లాస్ లేదు కాబట్టి హెడర్, బాటమ్ నావ్ వస్తాయి -->
+
+    <div class="app-container" id="app-container" style="display: none;">
+        
+        <!-- Dynamic Header -->
+        <header id="app-header" class="app-header"></header>
+
+        <main class="main-content">
+            
+            <!-- Welcome Banner -->
+            <div class="card" style="background: var(--primary); color: white; border: none;">
+                <h2 style="margin-bottom: 4px;">నమస్కారం, <span id="hm-name-display">HM</span> గారు</h2>
+                <p style="font-size: 0.9rem; opacity: 0.8;">Welcome to Headmaster Dashboard</p>
+            </div>
+
+            <!-- Edit PIN Option -->
+            <h3 style="margin: var(--space-md) 0 var(--space-sm) 0; color: var(--text-main);">Settings (సెట్టింగ్స్)</h3>
+            
+            <div class="card" onclick="openPinModal()" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Change PIN</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">మీ 6-డిజిట్ పిన్ ని మార్చుకోండి</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
+
+            <!-- Placeholder for other HM features -->
+            <h3 style="margin: var(--space-md) 0 var(--space-sm) 0; color: var(--text-main);">Management (నిర్వహణ)</h3>
+            
+            <div class="card" style="opacity: 0.6;">
+                <h4 style="font-size: 1rem;"><i class="fas fa-users" style="color: var(--primary); width: 25px;"></i> Manage Staff (Coming Soon)</h4>
+            </div>
+            <div class="card" style="opacity: 0.6;">
+                <h4 style="font-size: 1rem;"><i class="fas fa-school" style="color: var(--primary); width: 25px;"></i> Manage Classrooms (Coming Soon)</h4>
+            </div>
+            <div class="card" style="opacity: 0.6;">
+                <h4 style="font-size: 1rem;"><i class="fas fa-check-circle" style="color: var(--primary); width: 25px;"></i> Approvals (Coming Soon)</h4>
+            </div>
+
+        </main>
+
+        <!-- Dynamic Footer -->
+        <footer id="app-footer" class="app-footer"></footer>
+    </div>
+
+    <!-- Edit PIN Modal -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: var(--space-md); color: var(--primary);">Change PIN (పిన్ మార్చండి)</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Current PIN (పాత పిన్)</label>
+                <input type="password" id="old-pin" class="form-control" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="******">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">New 6-Digit PIN (కొత్త పిన్)</label>
+                <input type="password" id="new-pin" class="form-control" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="******">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: var(--space-lg);">
+                <button class="btn btn-outline" onclick="closePinModal()">Cancel</button>
+                <button class="btn btn-primary" id="save-pin-btn" onclick="saveNewPin()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 1. Check Authentication
+        const session = Auth.checkAuth('headmaster');
+        if (!session) {
+            window.location.href = 'index.html'; // Not logged in
+        } else {
+            // Show container and init UI
+            document.getElementById('app-container').style.display = 'flex';
+            UI.initLayout();
+            document.getElementById('hm-name-display').innerText = session.name;
+        }
+
+        // 2. Modal Logic
+        function openPinModal() {
+            document.getElementById('pin-modal').classList.add('active');
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').classList.remove('active');
+            document.getElementById('old-pin').value = '';
+            document.getElementById('new-pin').value = '';
+        }
+
+        // 3. Save New PIN
+        async function saveNewPin() {
+            const oldPin = document.getElementById('old-pin').value;
+            const newPin = document.getElementById('new-pin').value;
+            const btn = document.getElementById('save-pin-btn');
+
+            if (newPin.length !== 6) {
+                alert("కొత్త పిన్ తప్పనిసరిగా 6 అంకెలు ఉండాలి!");
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                // Get current PIN from Database
+                const schoolDoc = await db.collection('schoolInfo').doc('main').get();
+                const currentDbPin = schoolDoc.data().hmPin;
+
+                if (currentDbPin !== oldPin) {
+                    alert("❌ పాత పిన్ తప్పు ఉంది!");
+                    btn.innerHTML = 'Save';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Update PIN
+                await db.collection('schoolInfo').doc('main').update({
+                    hmPin: newPin
+                });
+
+                alert("✅ పిన్ విజయవంతంగా మార్చబడింది!");
+                closePinModal();
+            } catch (error) {
+                console.error("Error updating PIN:", error);
+                alert("❌ లోపం జరిగింది. మళ్ళీ ప్రయత్నించండి.");
+            } finally {
+                btn.innerHTML = 'Save';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
