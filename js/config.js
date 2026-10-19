@@ -15,3 +15,10 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore();
 const auth = firebase.auth();
+
+// 👇 ఇది తప్పనిసరిగా ఉండాలి (Anonymous Login)
+auth.signInAnonymously().then(() => {
+    console.log("Firebase Auth: Anonymous login successful!");
+}).catch((error) => {
+    console.error("Firebase Auth Error:", error);
+});
