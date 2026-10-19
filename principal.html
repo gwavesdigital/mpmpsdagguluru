@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -18,7 +17,6 @@
         <header id="app-header" class="app-header"></header>
 
         <main class="main-content" style="display: flex; flex-direction: column; justify-content: center;">
-            
             <div class="card" style="max-width: 400px; margin: 0 auto; width: 100%;">
                 <div style="text-align: center; margin-bottom: var(--space-lg);">
                     <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--primary);"></i>
@@ -38,22 +36,18 @@
                     </button>
                 </form>
             </div>
-
         </main>
 
         <footer id="app-footer" class="app-footer"></footer>
     </div>
 
-    <!-- Scripts -->
     <script src="js/config.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Init Header/Footer
         UI.initLayout();
-        document.getElementById('app-container').style.display = 'flex'; // Override display:none
+        document.getElementById('app-container').style.display = 'flex'; 
 
-        // Handle Login
         document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pin = document.getElementById('hm-pin').value;
@@ -66,7 +60,6 @@
 
             if (result.success) {
                 alert("✅ " + result.message);
-                // Redirect to HM Dashboard (We will build this next)
                 window.location.href = 'hm-dashboard.html'; 
             } else {
                 alert("❌ " + result.message);
