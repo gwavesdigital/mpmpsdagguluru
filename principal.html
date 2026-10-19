@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HM Login - Digital Manabadi</title>
+    <title>HM Portal - Digital Manabadi</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -15,7 +15,6 @@
 
     <div class="app-container" id="app-container" style="display: flex; flex-direction: column;">
         
-        <!-- Premium Header (Just Title) -->
         <header class="app-header" style="background: transparent; box-shadow: none; border: none; padding-top: 20px;">
             <div class="header-left">
                 <button class="header-btn" onclick="window.location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
@@ -26,8 +25,122 @@
 
         <main class="main-content" style="display: flex; flex-direction: column; justify-content: center; padding: 0 20px;">
             
-            <!-- Premium Login Card -->
-            <div class="premium-card">
+            <!-- ========================================== -->
+            <!-- VIEW 1: LOADING SCREEN -->
+            <!-- ========================================== -->
+            <div id="view-loading" style="text-align: center; color: var(--primary);">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                <h3>Loading School Data...</h3>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 2: PREMIUM SETUP FORM (First Time Only) -->
+            <!-- ========================================== -->
+            <div id="view-setup" class="premium-card" style="display: none;">
+                <div class="premium-card-icon" style="background: linear-gradient(135deg, #FFC107, #FF9800); box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);">
+                    <i class="fas fa-school"></i>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">School Setup</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">పాఠశాల ప్రారంభ సెటప్ (ఒకసారి మాత్రమే)</p>
+                </div>
+
+                <form id="setup-form">
+                    <div class="form-group">
+                        <label class="form-label">District (జిల్లా)</label>
+                        <select id="district" class="form-control" required>
+                            <option value="">Select District</option>
+                            <!-- AP Districts -->
+                            <option value="Anakapalli">Anakapalli</option>
+                            <option value="Anantapur">Anantapur</option>
+                            <option value="Annamayya">Annamayya</option>
+                            <option value="Bapatla">Bapatla</option>
+                            <option value="Chittoor">Chittoor</option>
+                            <option value="East Godavari">East Godavari</option>
+                            <option value="Eluru">Eluru</option>
+                            <option value="Guntur">Guntur</option>
+                            <option value="Kakinada">Kakinada</option>
+                            <option value="Konaseema">Konaseema</option>
+                            <option value="Krishna">Krishna</option>
+                            <option value="Kurnool">Kurnool</option>
+                            <option value="Nandyal">Nandyal</option>
+                            <option value="NTR">NTR</option>
+                            <option value="Palnadu">Palnadu</option>
+                            <option value="Parvathipuram Manyam">Parvathipuram Manyam</option>
+                            <option value="Prakasam">Prakasam</option>
+                            <option value="Sri Potti Sriramulu Nellore">Sri Potti Sriramulu Nellore</option>
+                            <option value="Sri Sathya Sai">Sri Sathya Sai</option>
+                            <option value="Srikakulam">Srikakulam</option>
+                            <option value="Tirupati">Tirupati</option>
+                            <option value="Visakhapatnam">Visakhapatnam</option>
+                            <option value="Vizianagaram">Vizianagaram</option>
+                            <option value="West Godavari">West Godavari</option>
+                            <option value="YSR Kadapa">YSR Kadapa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mandal (మండలం)</label>
+                        <input type="text" id="mandal" class="form-control" placeholder="ఉదా: Dagguluru" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Village (గ్రామం)</label>
+                        <input type="text" id="village" class="form-control" placeholder="ఉదా: Dagguluru" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">School Name (పాఠశాల పేరు)</label>
+                        <input type="text" id="schoolName" class="form-control" value="MP MPS Dagguluru" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Headmaster Name (HM పేరు)</label>
+                        <input type="text" id="hmName" class="form-control" placeholder="HM పేరు టైప్ చేయండి" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Valiass Secret Code (🔒 రహస్య కోడ్)</label>
+                        <div class="input-group">
+                            <i class="fas fa-shield-alt input-icon"></i>
+                            <input type="password" id="valiassCode" class="form-control" placeholder="వాల్యూ టీమ్ మాత్రమే టైప్ చేయాలి" required style="padding-left: 45px;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-glow" id="setup-btn" style="margin-top: 10px; height: 52px; border-radius: 14px;">
+                        <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Confirm Setup
+                    </button>
+                </form>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 3: PREMIUM SET PIN (After Setup) -->
+            <!-- ========================================== -->
+            <div id="view-setpin" class="premium-card" style="display: none;">
+                <div class="premium-card-icon" style="background: linear-gradient(135deg, #4CAF50, #2E7D32);">
+                    <i class="fas fa-key"></i>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Set Your PIN</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">మీ 6-డిజిట్ పిన్ సెట్ చేసుకోండి</p>
+                </div>
+
+                <form id="setpin-form">
+                    <div class="form-group">
+                        <label class="form-label">New 6-Digit PIN</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="new-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-glow" id="setpin-btn" style="margin-top: 10px; height: 52px; border-radius: 14px;">
+                        <i class="fas fa-save" style="margin-right: 8px;"></i> Save PIN
+                    </button>
+                </form>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 4: PREMIUM LOGIN (If already Setup) -->
+            <!-- ========================================== -->
+            <div id="view-login" class="premium-card" style="display: none;">
                 <div class="premium-card-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
@@ -47,9 +160,6 @@
                                 <i class="fas fa-eye" id="pin-eye-icon"></i>
                             </button>
                         </div>
-                        <small id="pin-hint" style="color: var(--text-muted); display: block; margin-top: 10px; text-align: center; font-size: 0.8rem;">
-                            మొదటిసారి అయితే కొత్త 6-డిజిట్ పిన్ సెట్ చేయండి
-                        </small>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-glow" id="login-btn" style="margin-top: 10px; height: 52px; border-radius: 14px; font-size: 1.1rem;">
@@ -70,7 +180,13 @@
         UI.initLayout();
         document.getElementById('app-container').style.display = 'flex'; 
 
-        // PIN Show/Hide Function
+        // Elements
+        const viewLoading = document.getElementById('view-loading');
+        const viewSetup = document.getElementById('view-setup');
+        const viewSetPin = document.getElementById('view-setpin');
+        const viewLogin = document.getElementById('view-login');
+
+        // PIN Show/Hide
         function togglePinVisibility() {
             const pinInput = document.getElementById('hm-pin');
             const eyeIcon = document.getElementById('pin-eye-icon');
@@ -83,6 +199,101 @@
             }
         }
 
+        // 1. Check Database on Load
+        async function checkSchoolStatus() {
+            try {
+                const doc = await db.collection('schoolInfo').doc('main').get();
+                
+                viewLoading.style.display = 'none';
+
+                if (doc.exists && doc.data().isSetupComplete) {
+                    if (!doc.data().hmPin) {
+                        // Setup done, but PIN not set yet
+                        viewSetPin.style.display = 'block';
+                    } else {
+                        // Fully ready, show Login
+                        viewLogin.style.display = 'block';
+                    }
+                } else {
+                    // First time, show Setup
+                    viewSetup.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                viewLoading.innerHTML = `<p style="color:red;">Error connecting to database. Check internet.</p>`;
+            }
+        }
+        checkSchoolStatus();
+
+        // 2. Handle Setup Form
+        document.getElementById('setup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('setup-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            const secretCode = document.getElementById('valiassCode').value.trim();
+            
+            // Hardcoded Valiass Secret Check
+            if (secretCode !== '@533340') {
+                alert("❌ తప్పు వాల్యూ సీక్రెట్ కోడ్! దయచేసి వాల్యూ టీమ్ ని సంప్రదించండి.");
+                btn.innerHTML = 'Confirm Setup';
+                btn.disabled = false;
+                return;
+            }
+
+            const schoolData = {
+                district: document.getElementById('district').value,
+                mandal: document.getElementById('mandal').value,
+                village: document.getElementById('village').value,
+                schoolName: document.getElementById('schoolName').value,
+                hmName: document.getElementById('hmName').value,
+                valiassCode: secretCode,
+                isSetupComplete: true,
+                sections: { teacher: false, cook: false, parent: false, office: false },
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('schoolInfo').doc('main').set(schoolData);
+                // Setup done, transition to PIN Setting
+                viewSetup.style.display = 'none';
+                viewSetPin.style.display = 'block';
+            } catch (error) {
+                alert("❌ Setup Failed: " + error.message);
+                btn.innerHTML = 'Confirm Setup';
+                btn.disabled = false;
+            }
+        });
+
+        // 3. Handle Set PIN Form
+        document.getElementById('setpin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('setpin-btn');
+            const newPin = document.getElementById('new-pin').value;
+
+            if (newPin.length !== 6) {
+                alert("PIN must be 6 digits!");
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                await db.collection('schoolInfo').doc('main').update({ hmPin: newPin });
+                alert("✅ Setup Complete! Please Login.");
+                // Transition to Login
+                viewSetPin.style.display = 'none';
+                viewLogin.style.display = 'block';
+            } catch (error) {
+                alert("Error setting PIN: " + error.message);
+                btn.innerHTML = 'Save PIN';
+                btn.disabled = false;
+            }
+        });
+
+        // 4. Handle Login Form
         document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pin = document.getElementById('hm-pin').value;
