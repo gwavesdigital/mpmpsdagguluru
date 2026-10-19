@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HM Login - Digital Manabadi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="not-logged-in">
+
+    <div class="app-container" id="app-container">
+        <header id="app-header" class="app-header"></header>
+
+        <main class="main-content" style="display: flex; flex-direction: column; justify-content: center;">
+            
+            <div class="card" style="max-width: 400px; margin: 0 auto; width: 100%;">
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--primary);"></i>
+                    <h2 style="margin-top: 10px;">Headmaster Login</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">ప్రిన్సిపాల్ లాగిన్</p>
+                </div>
+
+                <form id="hm-login-form">
+                    <div class="form-group">
+                        <label class="form-label">Enter 6-Digit PIN</label>
+                        <input type="password" id="hm-pin" class="form-control" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="******" required style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+                        <small id="pin-hint" style="color: var(--text-muted); display: block; margin-top: 5px; text-align: center;">మొదటిసారి అయితే కొత్త 6-డిజిట్ పిన్ సెట్ చేయండి</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="login-btn">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Login
+                    </button>
+                </form>
+            </div>
+
+        </main>
+
+        <footer id="app-footer" class="app-footer"></footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Init Header/Footer
+        UI.initLayout();
+        document.getElementById('app-container').style.display = 'flex'; // Override display:none
+
+        // Handle Login
+        document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pin = document.getElementById('hm-pin').value;
+            const btn = document.getElementById('login-btn');
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            btn.disabled = true;
+
+            const result = await Auth.loginHM(pin);
+
+            if (result.success) {
+                alert("✅ " + result.message);
+                // Redirect to HM Dashboard (We will build this next)
+                window.location.href = 'hm-dashboard.html'; 
+            } else {
+                alert("❌ " + result.message);
+                btn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Login';
+                btn.disabled = false;
+                document.getElementById('hm-pin').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
