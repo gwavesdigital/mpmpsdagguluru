@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valiass Setup - Digital Manabadi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="not-logged-in" style="background: var(--bg-color);">
+
+    <div class="app-container" style="display: flex; justify-content: center; align-items: center; padding: 20px;">
+        <div class="card" style="width: 100%; max-width: 400px;">
+            <div style="text-align: center; margin-bottom: var(--space-lg);">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary);"></i>
+                <h2 style="margin-top: 10px; color: var(--primary);">Valiass Master Setup</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">స్కూల్ ప్రారంభ సెటప్ (ఒకసారి మాత్రమే)</p>
+            </div>
+
+            <form id="setup-form">
+                <div class="form-group">
+                    <label class="form-label">District (జిల్లా)</label>
+                    <select id="district" class="form-control" required>
+                        <option value="">Select District</option>
+                        <option value="Krishna">Krishna (కృష్ణా)</option>
+                        <option value="Guntur">Guntur (గుంటూరు)</option>
+                        <option value="West Godavari">West Godavari (పశ్చిమ గోదావరి)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mandal (మండలం)</label>
+                    <input type="text" id="mandal" class="form-control" placeholder="ఉదా: Dagguluru" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Village (గ్రామం)</label>
+                    <input type="text" id="village" class="form-control" placeholder="ఉదా: Dagguluru" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">School Name (పాఠశాల పేరు)</label>
+                    <input type="text" id="schoolName" class="form-control" value="MP MPS Dagguluru" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Headmaster Name (HM పేరు)</label>
+                    <input type="text" id="hmName" class="form-control" placeholder="HM పేరు టైప్ చేయండి" required>
+                </div>
+
+                <div style="background: rgba(27,94,32,0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">Generated Valiass Code:</p>
+                    <h3 id="valiass-code-preview" style="color: var(--primary); letter-spacing: 2px;">----@533340</h3>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Confirm Setup
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const inputs = ['district', 'mandal', 'village', 'schoolName', 'hmName'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                let code = '';
+                inputs.forEach(inputId => {
+                    const val = document.getElementById(inputId).value.trim();
+                    code += val.length > 0 ? val.slice(-1).toLowerCase() : '-';
+                });
+                document.getElementById('valiass-code-preview').innerText = `${code}@533340`;
+            });
+        });
+
+        document.getElementById('setup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            const finalCode = document.getElementById('valiass-code-preview').innerText;
+
+            const schoolData = {
+                district: document.getElementById('district').value,
+                mandal: document.getElementById('mandal').value,
+                village: document.getElementById('village').value,
+                schoolName: document.getElementById('schoolName').value,
+                hmName: document.getElementById('hmName').value,
+                valiassCode: finalCode,
+                isSetupComplete: true,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                await db.collection('schoolInfo').doc('main').set(schoolData);
+                localStorage.setItem('dm_valiass_code', finalCode);
+                alert(`✅ Setup Successful!\n\nValiass Code: ${finalCode}\n\nPlease share this code with the Headmaster.`);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Error setting up: ", error);
+                alert("❌ Setup Failed: " + error.message);
+                btn.innerHTML = 'Confirm Setup';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
