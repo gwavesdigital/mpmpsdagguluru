@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap');
 
 /* =========================================
    1. CSS VARIABLES (Light & Dark Mode)
    ========================================= */
 :root {
   /* Brand Colors */
-  --primary: #1B5E20;        
+  --primary: #1B5E20;        /* Deep Green */
   --primary-light: #4CAF50;
-  --secondary: #FFC107;      
+  --secondary: #FFC107;      /* Gold */
   --danger: #D32F2F;
   --success: #388E3C;
   
@@ -55,14 +55,14 @@
   --text-muted: #94A3B8;
   --border-color: #334155;
   --primary: #4CAF50; 
-  --header-bg: #1E293B; /* Dark mode header */
+  --header-bg: #1E293B; 
 }
 
 /* =========================================
    2. RESET & BASE STYLES
    ========================================= */
 * {
-  box-sizing: border-box;
+  box-sizing: border-box; /* 👈 ఇది చాలా ముఖ్యం: బాక్సులు కట్ అవ్వకుండా ఆపుతుంది */
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
@@ -134,7 +134,7 @@ body.not-logged-in .bottom-nav {
   position: sticky;
   top: 0;
   height: var(--header-height);
-  background-color: var(--header-bg); /* Updated Light Green */
+  background-color: var(--header-bg); 
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -283,7 +283,139 @@ body.not-logged-in .bottom-nav {
 .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
 
 /* =========================================
-   8. MODALS / BOTTOM SHEETS
+   8. PREMIUM LOGIN/SETUP PAGE STYLES
+   ========================================= */
+.premium-card {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 40px 24px 30px 24px; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 380px; /* మొబైల్ స్క్రీన్ కి తగ్గట్టు */
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.premium-card-icon {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 8px 16px rgba(27, 94, 32, 0.25);
+  border: 4px solid var(--surface);
+  z-index: 10;
+}
+
+.form-group {
+  margin-bottom: var(--space-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  z-index: 10;
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+  height: 52px;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--bg-color);
+  color: var(--text-main);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+/* వాల్యూ కోడ్ ఇన్‌పుట్ కి ఎడమ వైపు ప్యాడింగ్ */
+.input-group .form-control {
+  padding-left: 45px; 
+}
+
+/* పిన్ ఇన్‌పుట్ ప్రత్యేక డిజైన్ */
+.pin-input {
+  text-align: center !important;
+  font-size: 1.5rem !important;
+  letter-spacing: 8px !important;
+  font-weight: 700 !important;
+  padding: 10px 45px 10px 45px !important; /* రెండు వైపులా ఐకాన్స్ కి చోటు */
+}
+
+.toggle-pin-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.form-control:focus {
+  background: var(--surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.1);
+  outline: none;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231B5E20%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px top 50%;
+  background-size: 12px auto;
+}
+
+.btn-glow {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border: none;
+  box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
+  transition: all 0.3s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 6px 20px rgba(27, 94, 32, 0.4);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   9. UTILITIES (Modals, Toasts, Skeletons)
    ========================================= */
 .modal-overlay {
   position: fixed;
@@ -316,9 +448,11 @@ body.not-logged-in .bottom-nav {
 }
 
 /* Animations */
-@keyframes slideDown {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
@@ -326,7 +460,7 @@ body.not-logged-in .bottom-nav {
 }
 
 /* =========================================
-   9. RESPONSIVE BREAKPOINTS
+   10. RESPONSIVE BREAKPOINTS
    ========================================= */
 @media (min-width: 768px) {
   .app-container {
@@ -343,118 +477,3 @@ body.not-logged-in .bottom-nav {
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
    }
-/* =========================================
-   10. PREMIUM LOGIN PAGE STYLES
-   ========================================= */
-.premium-card {
-  background: var(--surface);
-  border-radius: 24px;
-  padding: 32px 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid var(--border-color);
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  position: relative;
-  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-/* Dark mode shadow tweak */
-[data-theme="dark"] .premium-card {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.premium-card-icon {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
-  color: white;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin: -65px auto 20px auto; /* Pulls the icon up out of the card */
-  box-shadow: 0 10px 20px rgba(27, 94, 32, 0.3);
-  border: 4px solid var(--surface);
-}
-
-.input-group {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-}
-
-.pin-input {
-  padding-left: 45px !important;
-  padding-right: 45px !important;
-  text-align: center;
-  font-size: 1.5rem !important;
-  letter-spacing: 8px !important;
-  font-weight: 700 !important;
-  height: 56px;
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  color: var(--text-main);
-  transition: all 0.3s ease;
-}
-
-.pin-input:focus {
-  background: var(--surface);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(27, 94, 32, 0.1);
-}
-
-.toggle-pin-btn {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
-}
-
-.toggle-pin-btn:hover {
-  color: var(--primary);
-}
-
-.btn-glow {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  border: none;
-  box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
-  transition: all 0.3s ease;
-}
-
-.btn-glow:hover {
-  box-shadow: 0 6px 20px rgba(27, 94, 32, 0.4);
-  transform: translateY(-2px);
-}
-
-/* Background Animation */
-@keyframes slideUpFade {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Soft gradient background for the login page specifically */
-body.not-logged-in {
-  background: linear-gradient(180deg, var(--header-bg) 0%, var(--bg-color) 100%) !important;
-}
