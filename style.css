@@ -5,11 +5,14 @@
    ========================================= */
 :root {
   /* Brand Colors */
-  --primary: #1B5E20;        /* Deep Green */
+  --primary: #1B5E20;        
   --primary-light: #4CAF50;
-  --secondary: #FFC107;      /* Gold */
+  --secondary: #FFC107;      
   --danger: #D32F2F;
   --success: #388E3C;
+  
+  /* Header Colors */
+  --header-bg: #E8F5E9;      /* Light Green */
   
   /* Light Mode Surfaces */
   --bg-color: #F4F8FC;
@@ -51,7 +54,8 @@
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
   --border-color: #334155;
-  --primary: #4CAF50; /* Lighter green for dark mode */
+  --primary: #4CAF50; 
+  --header-bg: #1E293B; /* Dark mode header */
 }
 
 /* =========================================
@@ -81,7 +85,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hide bottom nav only before login */
 body.not-logged-in .bottom-nav {
   display: none !important;
 }
@@ -131,7 +134,7 @@ body.not-logged-in .bottom-nav {
   position: sticky;
   top: 0;
   height: var(--header-height);
-  background-color: var(--surface);
+  background-color: var(--header-bg); /* Updated Light Green */
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -139,6 +142,7 @@ body.not-logged-in .bottom-nav {
   padding: 0 var(--space-md);
   z-index: 100;
   box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease;
 }
 
 .header-left, .header-right {
@@ -173,7 +177,7 @@ body.not-logged-in .bottom-nav {
   transition: background 0.2s;
 }
 .header-btn:active {
-  background: var(--surface-hover);
+  background: rgba(0,0,0,0.05);
 }
 
 /* =========================================
@@ -278,6 +282,39 @@ body.not-logged-in .bottom-nav {
 .btn-secondary { background: var(--secondary); color: #212121; }
 .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
 
+/* =========================================
+   8. MODALS / BOTTOM SHEETS
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-content {
+  background: var(--surface);
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+}
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
 /* Animations */
 @keyframes slideDown {
   from { transform: translateY(-20px); opacity: 0; }
@@ -289,7 +326,7 @@ body.not-logged-in .bottom-nav {
 }
 
 /* =========================================
-   8. RESPONSIVE BREAKPOINTS
+   9. RESPONSIVE BREAKPOINTS
    ========================================= */
 @media (min-width: 768px) {
   .app-container {
