@@ -33,7 +33,7 @@
         <!-- Main Content -->
         <main class="main-content">
             
-            <!-- PWA Install Button -->
+            <!-- PWA Install Button (Auto hides after install) -->
             <button id="install-app-btn" class="btn btn-outline" style="margin-bottom: var(--space-lg); display: none;">
                 <i class="fas fa-download" style="margin-right: 8px;"></i> Install App
             </button>
@@ -87,6 +87,15 @@
                 </a>
             </div>
 
+            <!-- 👇 Font Size Controls (A+ / A-) ప్లేస్ చేసిన చోటు 👇 -->
+            <div style="margin-top: var(--space-xl); display: flex; justify-content: center; align-items: center;">
+                <div style="display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border-color); border-radius: 50px; padding: 4px; box-shadow: var(--shadow-sm);">
+                    <span style="font-size: 0.9rem; color: var(--text-muted); padding: 0 12px; font-weight: 600;">Aa</span>
+                    <button class="header-btn" onclick="UI.changeFontSize('decrease')" style="border-radius: 50%; width: 36px; height: 36px; background: var(--bg-color); color: var(--text-main); font-size: 1rem;">A-</button>
+                    <button class="header-btn" onclick="UI.changeFontSize('increase')" style="border-radius: 50%; width: 36px; height: 36px; background: var(--primary); color: white; font-size: 1rem; margin-left: 4px;">A+</button>
+                </div>
+            </div>
+
         </main>
 
         <!-- Dynamic Footer -->
@@ -98,4 +107,4 @@
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>
-</html>
+    </html>
