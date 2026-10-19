@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Staff - Digital Manabadi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="app-container" id="app-container" style="display: none;">
+        <header id="app-header" class="app-header"></header>
+
+        <main class="main-content">
+            <h2 style="color: var(--primary); margin-bottom: var(--space-md); font-size: 1.4rem;">Manage Staff (సిబ్బంది)</h2>
+            
+            <!-- Add Staff Form -->
+            <div class="card" style="margin-bottom: var(--space-lg);">
+                <h3 style="font-size: 1.1rem; margin-bottom: var(--space-md);"><i class="fas fa-user-plus"></i> Add New Teacher/Cook</h3>
+                <form id="add-staff-form">
+                    <div class="form-group">
+                        <select id="staff-role" class="form-control" required>
+                            <option value="">Select Role</option>
+                            <option value="teacher">Teacher (ఉపాధ్యాయుడు)</option>
+                            <option value="cook">Cook (వంటవాడు)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="staff-name" class="form-control" placeholder="Full Name (పూర్తి పేరు)" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="staff-phone" class="form-control" placeholder="Phone Number (10 digits)" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth (పుట్టిన తేదీ)</label>
+                        <input type="date" id="staff-dob" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="save-staff-btn">Generate ID & Save</button>
+                </form>
+            </div>
+
+            <!-- Staff List -->
+            <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm);">Staff List</h3>
+            <div id="staff-list">
+                <!-- Staff cards will appear here -->
+                <p style="color: var(--text-muted); text-align: center;">Loading...</p>
+            </div>
+
+        </main>
+        <footer id="app-footer" class="app-footer"></footer>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check Auth
+        const session = Auth.checkAuth('headmaster');
+        if (!session) window.location.href = 'index.html';
+        else {
+            document.getElementById('app-container').style.display = 'flex';
+            UI.initLayout();
+        }
+
+        // Logic to generate ID and PIN based on Blueprint
+        function calculateTeacherId(dobString) {
+            // dobString format is YYYY-MM-DD from input type="date"
+            const parts = dobString.split('-');
+            const ddmmyy = parseInt(parts[2] + parts[1] + parts[0].slice(-2));
+            return String(919720 - ddmmyy); // Teacher ID Formula
+        }
+
+        function calculateMasterPin(phone) {
+            const last4 = parseInt(phone.slice(-4));
+            return String(9999 - last4); // Master PIN Formula
+        }
+
+        // Add Staff Form Submit
+        document.getElementById('add-staff-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-staff-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            const role = document.getElementById('staff-role').value;
+            const name = document.getElementById('staff-name').value;
+            const phone = document.getElementById('staff-phone').value;
+            const dob = document.getElementById('staff-dob').value;
+
+            const teacherId = calculateTeacherId(dob);
+            const masterPin = calculateMasterPin(phone);
+
+            try {
+                // Save to 'users' collection
+                const docRef = await db.collection('users').add({
+                    role: role,
+                    name: name,
+                    phone: phone,
+                    dob: dob, // Store YYYY-MM-DD
+                    teacherId: teacherId,
+                    masterPin: masterPin, // Hashed in production
+                    schoolId: 'main', // Single school context
+                    isActive: true,
+                    isFirstLogin: true,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert(`✅ Staff Added Successfully!\n\nName: ${name}\nRole: ${role}\n\nTeacher ID: ${teacherId}\nMaster PIN: ${masterPin}\n\n(దయచేసి ఈ ID మరియు PIN ని స్టాఫ్ కి ఇవ్వండి)`);
+                
+                document.getElementById('add-staff-form').reset();
+                loadStaffList(); // Refresh list
+            } catch (error) {
+                alert("❌ Error adding staff: " + error.message);
+            } finally {
+                btn.innerHTML = 'Generate ID & Save';
+                btn.disabled = false;
+            }
+        });
+
+        // Load Staff List
+        async function loadStaffList() {
+            const listDiv = document.getElementById('staff-list');
+            listDiv.innerHTML = '<p style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+            
+            try {
+                const snapshot = await db.collection('users').where('role', 'in', ['teacher', 'cook']).get();
+                listDiv.innerHTML = ''; // Clear loading
+
+                if (snapshot.empty) {
+                    listDiv.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No staff members added yet.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const roleIcon = data.role === 'teacher' ? 'fa-chalkboard-teacher' : 'fa-utensils';
+                    
+                    listDiv.innerHTML += `
+                        <div class="card" style="display: flex; align-items: center; gap: 15px; padding: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                <i class="fas ${roleIcon}"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="font-size: 1rem; margin-bottom: 2px;">${data.name}</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);">
+                                    ID: <b>${data.teacherId}</b> | PIN: <b>${data.masterPin}</b>
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                listDiv.innerHTML = `<p style="color: red;">Error loading list: ${error.message}</p>`;
+            }
+        }
+
+        // Load on start
+        loadStaffList();
+    </script>
+</body>
+</html>
