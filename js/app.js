@@ -25,19 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--base-font-size', savedSize + 'px');
     }
 
-    // 4. Init UI Components
+    // 4. Init UI Components (Header, Footer, PWA)
     if(typeof UI !== 'undefined') {
         UI.initLayout();
         UI.initPWA();
     }
 });
 
-// 👇 కొత్తగా యాడ్ చేసిన ఫంక్షన్ (సెక్షన్ ఆన్ ఉందా లేదా అని చెక్ చేయడానికి)
+// ==========================================
+// 5. Access Control Logic (కార్డ్స్ పైన క్లిక్ చేసినప్పుడు)
+// ==========================================
 async function checkAccess(role) {
     try {
+        // డేటాబేస్ నుంచి స్కూల్ సమాచారం తీసుకోవడం
         const schoolDoc = await db.collection('schoolInfo').doc('main').get();
         
-        // 1. Setup పూర్తి కాలేదా?
+        // 1. స్కూల్ సెటప్ పూర్తి అయిందా అని చెక్ చేయడం
         if (!schoolDoc.exists || !schoolDoc.data().isSetupComplete) {
             alert("⚠️ స్కూల్ సెటప్ పూర్తి కాలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.\n(Valiass setup is not complete. Please contact Headmaster.)");
             return;
@@ -45,24 +48,26 @@ async function checkAccess(role) {
 
         const data = schoolDoc.data();
 
-        // 2. HM అయితే నేరుగా వెళ్లవచ్చు
+        // 2. హెడ్‌మాస్టర్ అయితే నేరుగా లాగిన్ పేజీకి పంపడం
         if (role === 'headmaster') {
             window.location.href = 'principal.html';
             return;
         }
 
-        // 3. మిగతా సెక్షన్స్ ఎనేబుల్ చేశారా?
+        // 3. మిగతా సెక్షన్స్ (Teacher, Cook, Parent) ఎనేబుల్ చేశారా అని చెక్ చేయడం
         const sections = data.sections || { teacher: false, cook: false, parent: false };
         
         if (sections[role] === true) {
-            window.location.href = role + '.html'; // teacher.html, parent.html కి వెళ్తుంది
+            // సెక్షన్ ఆన్ ఉంటే ఆ పేజీకి పంపడం
+            window.location.href = role + '.html'; 
         } else {
+            // ఆఫ్ ఉంటే మెసేజ్ చూపించడం
             alert(`⚠️ ${role.toUpperCase()} సెక్షన్ ఇంకా ఎనేబుల్ చేయలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.\n(Section not enabled. Please contact Headmaster.)`);
         }
 
     } catch (error) {
         console.error("Access Check Error:", error);
-        alert("నెట్‌వర్క్ లోపం. మళ్ళీ ప్రయత్నించండి.");
+        // ఎర్రర్ ఏంటో తెలియడానికి ఎగ్జాక్ట్ మెసేజ్ చూపిస్తున్నాం
+        alert("❌ Error: " + error.message); 
     }
 }
-
