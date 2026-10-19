@@ -1,0 +1,433 @@
+/* ==========================================================================
+   DIGITAL MANABADI - MASTER CSS (v5.0)
+   Theme: Premium AP Govt School (Deep Green & Gold)
+   Features: Fluid Typography, Dark Mode, Header, Bottom Nav, Modals, Toasts
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap');
+
+/* =========================================
+   1. CSS VARIABLES (Light & Dark Mode)
+   ========================================= */
+:root {
+  /* Brand Colors */
+  --primary: #1B5E20;        /* Deep Green */
+  --primary-light: #4CAF50;
+  --secondary: #FFC107;      /* Gold */
+  --danger: #D32F2F;
+  --success: #388E3C;
+  
+  /* Light Mode Surfaces */
+  --bg-color: #F4F8FC;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F5F9;
+  --text-main: #212121;
+  --text-muted: #757575;
+  --border-color: #E2E8F0;
+
+  /* Typography */
+  --font-family: 'Inter', 'Noto Sans Telugu', sans-serif;
+  --base-font-size: 16px; /* JS updates this for A+/A- */
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* UI Elements */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --header-height: 60px;
+  --bottom-nav-height: 65px;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --bg-color: #0F172A;
+  --surface: #1E293B;
+  --surface-hover: #334155;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-color: #334155;
+  --primary: #4CAF50; /* Lighter green for dark mode contrast */
+}
+
+/* =========================================
+   2. RESET & BASE STYLES
+   ========================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: var(--base-font-size);
+  transition: font-size 0.2s ease;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100dvh; /* Fixes mobile address bar cutoff */
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hide UI elements before login */
+body.not-logged-in .app-header,
+body.not-logged-in .bottom-nav,
+body.not-logged-in .app-footer {
+  display: none !important;
+}
+
+/* Main App Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 1024px; /* Constrains width on Desktop/Tablets */
+  margin: 0 auto;
+  position: relative;
+  background-color: var(--bg-color);
+  box-shadow: var(--shadow-lg);
+}
+
+/* =========================================
+   3. SPLASH SCREEN
+   ========================================= */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: white;
+  transition: opacity 0.4s ease;
+}
+.splash-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-logo {
+  width: clamp(80px, 20vw, 120px);
+  margin-bottom: var(--space-md);
+  animation: pulse 2s infinite;
+}
+
+/* =========================================
+   4. HEADER (Menu, Back, Title, Logout)
+   ========================================= */
+.app-header {
+  position: sticky;
+  top: 0;
+  height: var(--header-height);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 60px;
+}
+.header-right { justify-content: flex-end; }
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+.header-btn:active {
+  background: var(--surface-hover);
+}
+
+/* =========================================
+   5. MAIN CONTENT & BOTTOM NAV
+   ========================================= */
+.main-content {
+  flex: 1;
+  padding: var(--space-md);
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-xl)); /* Prevent content hiding behind nav */
+  width: 100%;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1024px;
+  height: var(--bottom-nav-height);
+  background-color: var(--surface);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom); /* iOS Safe Area */
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.75rem;
+  gap: 4px;
+  flex: 1;
+  height: 100%;
+  transition: color 0.2s;
+}
+
+.nav-item.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+.nav-item svg, .nav-item i {
+  font-size: 1.4rem;
+}
+
+/* =========================================
+   6. FOOTER (Signature)
+   ========================================= */
+.app-footer {
+  text-align: center;
+  padding: var(--space-md);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border-color);
+}
+.valiass-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.valiass-link:hover, .valiass-link:active {
+  background: rgba(27, 94, 32, 0.1);
+}
+
+/* =========================================
+   7. UI COMPONENTS (Cards, Buttons, Inputs)
+   ========================================= */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--space-md);
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease;
+}
+.card:active { transform: scale(0.98); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-family: inherit;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--secondary); color: #212121; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+/* Forms */
+.form-group { margin-bottom: var(--space-md); }
+.form-label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.form-control {
+  width: 100%;
+  padding: 12px var(--space-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--surface);
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.15);
+}
+
+/* =========================================
+   8. UTILITIES (Toasts, Skeletons, Modals)
+   ========================================= */
+/* Toasts */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 90%;
+  max-width: 400px;
+}
+.toast {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideDown 0.3s ease forwards;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+
+/* Modals / Bottom Sheets */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end; /* Bottom sheet style on mobile */
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-content {
+  background: var(--surface);
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+/* Skeletons */
+.skeleton {
+  background: linear-gradient(90deg, var(--border-color) 25%, var(--surface-hover) 50%, var(--border-color) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+.skeleton-text { height: 16px; margin-bottom: 8px; width: 100%; }
+.skeleton-avatar { width: 50px; height: 50px; border-radius: 50%; }
+
+/* Empty States */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.3; }
+
+/* =========================================
+   9. ANIMATIONS
+   ========================================= */
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* =========================================
+   10. RESPONSIVE BREAKPOINTS
+   ========================================= */
+@media (min-width: 768px) {
+  .app-container {
+    margin: var(--space-lg) auto;
+    min-height: calc(100dvh - 48px);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .main-content {
+    padding: var(--space-xl);
+  }
+  .bottom-nav {
+    position: sticky;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+}
