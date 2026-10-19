@@ -1,0 +1,20 @@
+{
+  "name": "MP MPS Dagguluru - Digital Manabadi",
+  "short_name": "Digital Manabadi",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F4F8FC",
+  "theme_color": "#1B5E20",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3976/3976625.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3976/3976625.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
