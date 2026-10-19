@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -82,6 +83,7 @@
 
             const finalCode = document.getElementById('valiass-code-preview').innerText;
 
+            // ఇక్కడ sections ని డిఫాల్ట్ గా false గా సెట్ చేశాం
             const schoolData = {
                 district: document.getElementById('district').value,
                 mandal: document.getElementById('mandal').value,
@@ -90,13 +92,14 @@
                 hmName: document.getElementById('hmName').value,
                 valiassCode: finalCode,
                 isSetupComplete: true,
+                sections: { teacher: false, cook: false, parent: false, office: false },
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             try {
                 await db.collection('schoolInfo').doc('main').set(schoolData);
                 localStorage.setItem('dm_valiass_code', finalCode);
-                alert(`✅ Setup Successful!\n\nValiass Code: ${finalCode}\n\nPlease share this code with the Headmaster.`);
+                alert(`✅ Setup Successful!\n\nValiass Code: ${finalCode}`);
                 window.location.href = 'index.html';
             } catch (error) {
                 console.error("Error setting up: ", error);
