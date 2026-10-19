@@ -25,63 +25,32 @@
 
         <main class="main-content" style="display: flex; flex-direction: column; justify-content: center; padding: 20px;">
             
-            <!-- Loading View -->
             <div id="view-loading" style="text-align: center; color: var(--primary);">
                 <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 10px;"></i>
                 <h3>Loading...</h3>
             </div>
 
-            <!-- View 1: Setup Form (Includes PIN) -->
+            <!-- View 1: Setup Form -->
             <div id="view-setup" class="premium-card" style="display: none;">
                 <div class="premium-card-icon" style="background: linear-gradient(135deg, #FFC107, #FF9800);">
                     <i class="fas fa-school"></i>
                 </div>
                 <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">School Setup</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">మొదటిసారి మాత్రమే (First Time Setup)</p>
                 </div>
 
                 <form id="setup-form">
                     <div class="form-group">
                         <select id="district" class="form-control" required>
                             <option value="">Select District</option>
-                            <!-- AP Districts -->
-                            <option value="Anakapalli">Anakapalli</option>
-                            <option value="Anantapur">Anantapur</option>
-                            <option value="Annamayya">Annamayya</option>
-                            <option value="Bapatla">Bapatla</option>
-                            <option value="Chittoor">Chittoor</option>
-                            <option value="East Godavari">East Godavari</option>
-                            <option value="Eluru">Eluru</option>
-                            <option value="Guntur">Guntur</option>
-                            <option value="Kakinada">Kakinada</option>
-                            <option value="Konaseema">Konaseema</option>
                             <option value="Krishna">Krishna</option>
-                            <option value="Kurnool">Kurnool</option>
-                            <option value="Nandyal">Nandyal</option>
-                            <option value="NTR">NTR</option>
-                            <option value="Palnadu">Palnadu</option>
-                            <option value="Parvathipuram Manyam">Parvathipuram Manyam</option>
-                            <option value="Prakasam">Prakasam</option>
-                            <option value="Sri Potti Sriramulu Nellore">Sri Potti Sriramulu Nellore</option>
-                            <option value="Sri Sathya Sai">Sri Sathya Sai</option>
-                            <option value="Srikakulam">Srikakulam</option>
-                            <option value="Tirupati">Tirupati</option>
-                            <option value="Visakhapatnam">Visakhapatnam</option>
-                            <option value="Vizianagaram">Vizianagaram</option>
+                            <option value="Guntur">Guntur</option>
                             <option value="West Godavari">West Godavari</option>
-                            <option value="YSR Kadapa">YSR Kadapa</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <input type="text" id="mandal" class="form-control" placeholder="Mandal (మండలం)" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="village" class="form-control" placeholder="Village (గ్రామం)" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="hmName" class="form-control" placeholder="Headmaster Name (HM పేరు)" required>
-                    </div>
+                    <div class="form-group"><input type="text" id="mandal" class="form-control" placeholder="Mandal (మండలం)" required></div>
+                    <div class="form-group"><input type="text" id="village" class="form-control" placeholder="Village (గ్రామం)" required></div>
+                    <div class="form-group"><input type="text" id="hmName" class="form-control" placeholder="Headmaster Name (HM పేరు)" required></div>
                     
                     <div class="form-group">
                         <div class="input-group">
@@ -89,49 +58,69 @@
                             <input type="password" id="valiassCode" class="form-control" placeholder="Valiass Secret Code" required>
                         </div>
                     </div>
-
                     <div class="form-group" style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border-color);">
-                        <label class="form-label" style="font-size: 0.85rem; color: var(--primary); font-weight: 700;"><i class="fas fa-key"></i> Set Your 6-Digit PIN</label>
+                        <label class="form-label" style="color: var(--primary); font-weight: 700;"><i class="fas fa-key"></i> Set Your 6-Digit PIN</label>
                         <div class="input-group">
                             <i class="fas fa-lock input-icon"></i>
                             <input type="password" id="setup-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
                         </div>
-                        <small style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 5px;">ప్రతిసారి లాగిన్ అవ్వడానికి ఈ పిన్ వాడాలి.</small>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-glow" id="setup-btn" style="margin-top: 15px; height: 52px; border-radius: 12px;">
-                        Confirm & Save Setup
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-glow" id="setup-btn" style="margin-top: 15px;">Confirm & Save Setup</button>
                 </form>
             </div>
 
             <!-- View 2: Login Form -->
             <div id="view-login" class="premium-card" style="display: none;">
-                <div class="premium-card-icon">
-                    <i class="fas fa-user-shield"></i>
-                </div>
+                <div class="premium-card-icon"><i class="fas fa-user-shield"></i></div>
                 <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Welcome Back</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">Headmaster Login (ప్రిన్సిపాల్ లాగిన్)</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Headmaster Login</p>
                 </div>
                 <form id="hm-login-form">
                     <div class="form-group">
                         <div class="input-group">
                             <i class="fas fa-lock input-icon"></i>
                             <input type="password" id="hm-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
-                            <button type="button" class="toggle-pin-btn" onclick="togglePinVisibility()">
-                                <i class="fas fa-eye" id="pin-eye-icon"></i>
-                            </button>
+                        </div>
+                        <!-- Forgot PIN Link -->
+                        <div style="text-align: right; margin-top: 8px;">
+                            <a href="#" onclick="showResetView()" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Forgot PIN?</a>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-glow" id="login-btn" style="margin-top: 10px; height: 52px; border-radius: 12px;">
-                        <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Login
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-glow" id="login-btn" style="margin-top: 10px;">Login</button>
+                </form>
+            </div>
+
+            <!-- View 3: Reset PIN Form (New) -->
+            <div id="view-reset" class="premium-card" style="display: none;">
+                <div class="premium-card-icon" style="background: linear-gradient(135deg, #D32F2F, #B71C1C);"><i class="fas fa-unlock-alt"></i></div>
+                <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
+                    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Reset PIN</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">వాల్యూ టీమ్ ఇచ్చిన కోడ్ ని ఎంటర్ చేయండి</p>
+                </div>
+                <form id="reset-form">
+                    <div class="form-group">
+                        <label class="form-label">Valiass Reset Code</label>
+                        <div class="input-group">
+                            <i class="fas fa-shield-alt input-icon"></i>
+                            <input type="text" id="reset-code" class="form-control" placeholder="919120 - ddmmyy" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New 6-Digit PIN</label>
+                        <div class="input-group">
+                            <i class="fas fa-key input-icon"></i>
+                            <input type="password" id="reset-new-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-glow" id="reset-btn" style="margin-top: 10px;">Reset PIN</button>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="#" onclick="showLoginView()" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">Back to Login</a>
+                    </div>
                 </form>
             </div>
 
         </main>
-
         <footer id="app-footer" class="app-footer" style="background: transparent; border: none;"></footer>
     </div>
 
@@ -145,40 +134,25 @@
         const viewLoading = document.getElementById('view-loading');
         const viewSetup = document.getElementById('view-setup');
         const viewLogin = document.getElementById('view-login');
+        const viewReset = document.getElementById('view-reset');
 
-        // పిన్ కనిపించేలా చేసే ఫంక్షన్
-        function togglePinVisibility() {
-            const pinInput = document.getElementById('hm-pin');
-            const eyeIcon = document.getElementById('pin-eye-icon');
-            if (pinInput.type === 'password') {
-                pinInput.type = 'text';
-                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pinInput.type = 'password';
-                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        }
+        function showResetView() { viewLogin.style.display = 'none'; viewReset.style.display = 'block'; }
+        function showLoginView() { viewReset.style.display = 'none'; viewLogin.style.display = 'block'; }
 
-        // 1. పేజీ లోడ్ అయినప్పుడు సెటప్ ఉందా లేదా చెక్ చేయడం
         async function checkSchoolStatus() {
             try {
                 const doc = await db.collection('schoolInfo').doc('main').get();
                 viewLoading.style.display = 'none';
-
                 if (doc.exists && doc.data().isSetupComplete && doc.data().hmPin) {
-                    // సెటప్ మరియు పిన్ రెండూ ఉన్నాయి -> లాగిన్ చూపించు
                     viewLogin.style.display = 'block'; 
                 } else {
-                    // ఫస్ట్ టైమ్ లేదా పిన్ లేదు -> సెటప్ చూపించు
                     viewSetup.style.display = 'block'; 
                 }
-            } catch (error) {
-                viewLoading.innerHTML = `<p style="color:red;">Error connecting. Check internet.</p>`;
-            }
+            } catch (error) { viewLoading.innerHTML = `<p style="color:red;">Error connecting.</p>`; }
         }
         checkSchoolStatus();
 
-        // 2. సెటప్ మరియు పిన్ సేవ్ చేసే ఫారం
+        // Setup Form
         document.getElementById('setup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('setup-btn');
@@ -188,72 +162,78 @@
             const secretCode = document.getElementById('valiassCode').value.trim();
             const setupPin = document.getElementById('setup-pin').value.trim();
             
-            // వాల్యూ సీక్రెట్ కోడ్ చెక్
-            if (secretCode !== '@533340') {
-                alert("❌ తప్పు వాల్యూ సీక్రెట్ కోడ్! దయచేసి వాల్యూ టీమ్ ని సంప్రదించండి.");
-                btn.innerHTML = 'Confirm & Save Setup';
-                btn.disabled = false;
-                return;
-            }
-
-            // పిన్ 6 డిజిట్స్ ఉందా అని చెక్
-            if (setupPin.length !== 6) {
-                alert("❌ పిన్ తప్పనిసరిగా 6 అంకెలు ఉండాలి!");
-                btn.innerHTML = 'Confirm & Save Setup';
-                btn.disabled = false;
-                return;
-            }
-
-            const schoolData = {
-                district: document.getElementById('district').value,
-                mandal: document.getElementById('mandal').value,
-                village: document.getElementById('village').value,
-                schoolName: "MP MPS Dagguluru",
-                hmName: document.getElementById('hmName').value,
-                valiassCode: secretCode,
-                isSetupComplete: true,
-                hmPin: setupPin, // 👈 పిన్ ని ఇక్కడే సేవ్ చేస్తున్నాం
-                sections: { teacher: false, cook: false, parent: false, office: false },
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
+            if (secretCode !== '@533340') { alert("❌ తప్పు వాల్యూ సీక్రెట్ కోడ్!"); btn.innerHTML = 'Confirm'; btn.disabled = false; return; }
+            if (setupPin.length !== 6) { alert("❌ పిన్ 6 అంకెలు ఉండాలి!"); btn.innerHTML = 'Confirm'; btn.disabled = false; return; }
 
             try {
-                // డేటాబేస్ లో సేవ్ చేయడం
-                await db.collection('schoolInfo').doc('main').set(schoolData);
-                
-                // సక్సెస్ మెసేజ్
-                alert("✅ Setup Successful! Please login with your new PIN.");
-                
-                // సెటప్ స్క్రీన్ ని దాచి, లాగిన్ స్క్రీన్ చూపించడం
+                await db.collection('schoolInfo').doc('main').set({
+                    district: document.getElementById('district').value,
+                    mandal: document.getElementById('mandal').value,
+                    village: document.getElementById('village').value,
+                    schoolName: "MP MPS Dagguluru",
+                    hmName: document.getElementById('hmName').value,
+                    valiassCode: secretCode,
+                    isSetupComplete: true,
+                    hmPin: setupPin,
+                    sections: { teacher: false, cook: false, parent: false, office: false },
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert("✅ Setup Successful! Please login.");
                 viewSetup.style.display = 'none';
                 viewLogin.style.display = 'block'; 
-                
-            } catch (error) {
-                alert("❌ Setup Failed: " + error.message);
-                btn.innerHTML = 'Confirm & Save Setup';
-                btn.disabled = false;
-            }
+            } catch (error) { alert("❌ Failed: " + error.message); btn.innerHTML = 'Confirm'; btn.disabled = false; }
         });
 
-        // 3. లాగిన్ ఫారం
+        // Login Form
         document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pin = document.getElementById('hm-pin').value;
             const btn = document.getElementById('login-btn');
-            
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
             btn.disabled = true;
 
             const result = await Auth.loginHM(pin);
+            if (result.success) { window.location.href = 'hm-dashboard.html'; } 
+            else { alert("❌ " + result.message); btn.innerHTML = 'Login'; btn.disabled = false; }
+        });
 
-            if (result.success) {
-                alert("✅ " + result.message);
-                window.location.href = 'hm-dashboard.html'; // డాష్‌బోర్డ్ కి వెళ్తుంది
-            } else {
-                alert("❌ " + result.message);
-                btn.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i> Login';
+        // Reset PIN Form (Valiass Code Logic)
+        document.getElementById('reset-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('reset-btn');
+            const resetCode = document.getElementById('reset-code').value.trim();
+            const newPin = document.getElementById('reset-new-pin').value.trim();
+
+            // ఈరోజు తేదీని ddmmyy ఫార్మాట్ లోకి మార్చడం
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yy = String(today.getFullYear()).slice(-2);
+            const ddmmyy = parseInt(dd + mm + yy);
+            
+            // వాల్యూ రీసెట్ కోడ్ ఫార్ములా: 919120 - ddmmyy
+            const expectedCode = String(919120 - ddmmyy);
+
+            if (resetCode !== expectedCode) {
+                alert(`❌ తప్పు రీసెట్ కోడ్!\n(సరైన కోడ్ ఈరోజు తేదీ ప్రకారం ఉండాలి. వాల్యూ టీమ్ ని సంప్రదించండి.)`);
+                return;
+            }
+
+            if (newPin.length !== 6) { alert("❌ కొత్త పిన్ 6 అంకెలు ఉండాలి!"); return; }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting...';
+            btn.disabled = true;
+
+            try {
+                await db.collection('schoolInfo').doc('main').update({ hmPin: newPin });
+                alert("✅ PIN విజయవంతంగా రీసెట్ అయ్యింది! కొత్త పిన్ తో లాగిన్ అవ్వండి.");
+                showLoginView();
+                btn.innerHTML = 'Reset PIN';
                 btn.disabled = false;
-                document.getElementById('hm-pin').value = '';
+            } catch (error) {
+                alert("❌ Error: " + error.message);
+                btn.innerHTML = 'Reset PIN';
+                btn.disabled = false;
             }
         });
     </script>
