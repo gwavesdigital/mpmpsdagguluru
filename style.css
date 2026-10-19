@@ -477,3 +477,77 @@ select.form-control {
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
    }
+/* =========================================
+   11. PREMIUM EXTRA TOUCHES (Animations & Glows)
+   ========================================= */
+
+/* 1. Soft Background Glow for Login/Setup Pages */
+body.not-logged-in {
+  background: radial-gradient(circle at 50% 0%, rgba(76, 175, 80, 0.15) 0%, var(--bg-color) 60%) !important;
+}
+
+/* 2. Input Focus Magic */
+/* పిన్ బాక్స్ లో టైప్ చేయడానికి క్లిక్ చేసినప్పుడు లాక్ ఐకాన్ గ్రీన్ కలర్ లోకి మారుతుంది */
+.input-group:focus-within .input-icon {
+  color: var(--primary);
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.input-group:focus-within .form-control {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
+}
+
+/* 3. Premium Button Shine Effect */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  transition: all 0.7s ease;
+}
+
+.btn-glow:hover::before {
+  left: 120%;
+}
+
+/* 4. Better Splash Screen Animation */
+.splash-logo {
+  animation: zoomInBounce 1.5s ease-out forwards !important;
+}
+
+@keyframes zoomInBounce {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 5. Card Hover Effects for Dashboard */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border-color: rgba(76, 175, 80, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 6. Modern PIN Input Dots (బాక్సులు ఇంకా అందంగా) */
+.pin-input {
+  background: #ffffff !important;
+  border: 2px solid #E2E8F0 !important;
+}
+[data-theme="dark"] .pin-input {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+}
