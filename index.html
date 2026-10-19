@@ -12,7 +12,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     
-    <!-- Icons (FontAwesome for quick icons) -->
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="not-logged-in">
@@ -27,19 +27,13 @@
     <!-- App Container -->
     <div class="app-container" id="app-container" style="display: none;">
         
-        <!-- Dynamic Header (JS will load this) -->
+        <!-- Dynamic Header -->
         <header id="app-header" class="app-header"></header>
 
         <!-- Main Content -->
         <main class="main-content">
             
-            <!-- School Title -->
-            <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: var(--space-md);">
-                <h1 style="color: var(--primary); font-size: 1.8rem; margin-bottom: 4px;">MP MPS Dagguluru</h1>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Digital Manabadi Portal</p>
-            </div>
-
-            <!-- PWA Install Button (Hidden by default, shown if installable) -->
+            <!-- PWA Install Button -->
             <button id="install-app-btn" class="btn btn-outline" style="margin-bottom: var(--space-lg); display: none;">
                 <i class="fas fa-download" style="margin-right: 8px;"></i> Install App
             </button>
@@ -52,7 +46,7 @@
                     <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
                         <i class="fas fa-user-tie"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem;">Headmaster</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 2px;">Headmaster</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">ప్రిన్సిపాల్</p>
                 </a>
 
@@ -61,7 +55,7 @@
                     <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem;">Teacher</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 2px;">Teacher</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">ఉపాధ్యాయుడు</p>
                 </a>
 
@@ -70,7 +64,7 @@
                     <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
                         <i class="fas fa-utensils"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem;">Cook</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 2px;">Cook</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">వంటవాడు</p>
                 </a>
 
@@ -79,7 +73,7 @@
                     <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: var(--space-sm);">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem;">Parent</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 2px;">Parent</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">తల్లిదండ్రులు</p>
                 </a>
 
@@ -88,23 +82,14 @@
                     <div style="font-size: 2rem; color: var(--text-muted); margin-bottom: var(--space-xs);">
                         <i class="fas fa-building"></i>
                     </div>
-                    <h3 style="font-size: 1.1rem;">Office Section</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 2px;">Office Section</h3>
                     <p style="font-size: 0.8rem; color: var(--danger);">Coming Soon</p>
                 </a>
             </div>
 
-            <!-- Settings (Theme / Font Toggle) -->
-            <div style="margin-top: var(--space-xl); display: flex; justify-content: center; gap: var(--space-md);">
-                <button class="btn btn-outline" onclick="UI.toggleTheme()" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">
-                    <i class="fas fa-moon" id="theme-icon"></i> Theme
-                </button>
-                <button class="btn btn-outline" onclick="UI.changeFontSize('increase')" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">A+</button>
-                <button class="btn btn-outline" onclick="UI.changeFontSize('decrease')" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">A-</button>
-            </div>
-
         </main>
 
-        <!-- Dynamic Footer (JS will load this) -->
+        <!-- Dynamic Footer -->
         <footer id="app-footer" class="app-footer"></footer>
     </div>
 
