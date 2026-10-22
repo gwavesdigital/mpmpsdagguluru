@@ -1,7 +1,7 @@
 // js/app.js
 
 // =====================================================
-// SPLASH HIDE — Fallback (DOMContentLoaded తో సంబంధం లేకుండా)
+// SPLASH HIDE — index.html కోసం (id="splash-screen")
 // =====================================================
 (function hideSplashAfterDelay() {
     function doHide() {
@@ -18,17 +18,15 @@
         }
         if (appContainer) {
             appContainer.style.display = 'flex';
+            appContainer.style.opacity = '1';
         }
     }
 
-    // DOM ready అయ్యాక లేదా 1.5s తర్వాత — ఏది ముందు వస్తే అది
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => setTimeout(doHide, 1500));
     } else {
         setTimeout(doHide, 1500);
     }
-
-    // Safety net: 3 సెకన్ల తర్వాత ఖచ్చితంగా hide చేయి
     setTimeout(doHide, 3000);
 })();
 
@@ -36,19 +34,14 @@
 // MAIN INIT
 // =====================================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Apply Saved Theme
     const savedTheme = localStorage.getItem('dm_theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
-    const icon = document.getElementById('theme-icon');
-    if (icon) icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 
-    // Apply Saved Font Size
     const savedSize = localStorage.getItem('dm_font_size');
     if (savedSize) {
         document.documentElement.style.setProperty('--base-font-size', savedSize + 'px');
     }
 
-    // Init UI Components
     if (typeof UI !== 'undefined') {
         UI.initLayout();
         UI.initPWA();
@@ -56,9 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // =====================================================
-// Access Control
+// ACCESS CONTROL
 // =====================================================
 async function checkAccess(role) {
+    // HM కి ఎప్పుడూ వెళ్లు — డేటాబేస్ చెక్ అవసరం లేదు
     if (role === 'headmaster') {
         window.location.href = 'headmaster.html';
         return;
@@ -67,6 +61,7 @@ async function checkAccess(role) {
     let data = null;
 
     try {
+        // Auth పూర్తి అయ్యే వరకు వేచి ఉండు (fail అయినా కొనసాగు)
         if (typeof authReady !== 'undefined') {
             await Promise.race([
                 authReady,
@@ -93,7 +88,6 @@ async function checkAccess(role) {
     }
 
     const sections = data.sections || {};
-    
     if (sections[role] === true) {
         window.location.href = role + '.html';
     } else {
@@ -112,10 +106,6 @@ function showAccessError(message) {
 }
 
 function getRoleLabel(role) {
-    const labels = {
-        teacher: 'టీచర్',
-        cook: 'వంటవాడు',
-        parent: 'తల్లిదండ్రుల'
-    };
+    const labels = { teacher: 'టీచర్', cook: 'వంటవాడు', parent: 'తల్లిదండ్రుల' };
     return labels[role] || role.toUpperCase();
 }
