@@ -139,7 +139,7 @@ function bindEvents() {
     if (loginPin) {
         loginPin.addEventListener('input', () => {
             loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 4);
-            if (loginPin.value.length === 4) {
+            if (loginPin.value.length === 6) {
                 setTimeout(() => handleLogin(), 150);
             }
         });
