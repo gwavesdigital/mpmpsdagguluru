@@ -16,20 +16,30 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore();
-const auth = firebase.auth();
 
 // =====================================================
-// Anonymous Auth Promise
-// Firestore rules లో request.auth != null ఉంటే,
-// డేటా రాసే ముందు auth పూర్తి కావాలి.
-// వాడే చోట: await authReady;
+// Anonymous Auth — Crash-Proof
+// firebase-auth-compat.js లోడ్ కాకపోయినా యాప్ ఆగకూడదు
 // =====================================================
-const authReady = auth.signInAnonymously()
-    .then(() => {
-        console.log("✅ Firebase Auth: Anonymous login successful!");
-        return true;
-    })
-    .catch((error) => {
-        console.error("❌ Firebase Auth Error:", error);
-        return false;
-    });
+let auth = null;
+let authReady = Promise.resolve(false);
+
+if (typeof firebase.auth === 'function') {
+    try {
+        auth = firebase.auth();
+        authReady = auth.signInAnonymously()
+            .then(() => {
+                console.log("✅ Firebase Auth: Anonymous login successful!");
+                return true;
+            })
+            .catch((error) => {
+                console.warn("⚠️ Anonymous Auth failed:", error.code || error.message);
+                return false;
+            });
+    } catch (err) {
+        console.warn("⚠️ Firebase Auth init error:", err.message);
+        authReady = Promise.resolve(false);
+    }
+} else {
+    console.warn("⚠️ firebase-auth-compat.js NOT loaded. Auth disabled.");
+}
