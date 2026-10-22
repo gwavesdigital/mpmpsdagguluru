@@ -2,16 +2,24 @@
 const Auth = {
 
     // =====================================================
-    // HM LOGIN
+    // HM LOGIN — 4 నుండి 6 అంకెల PIN సపోర్ట్
     // =====================================================
     loginHM: async function(enteredPin) {
         try {
+            // 1. Lockout చెక్
             const lockUntil = parseInt(localStorage.getItem('dm_lock_until') || '0');
             if (Date.now() < lockUntil) {
                 const remaining = Math.ceil((lockUntil - Date.now()) / 1000);
                 return { success: false, message: `లాక్ అయ్యింది. ${remaining} సెకన్ల తర్వాత ప్రయత్నించండి.` };
             }
 
+            // 2. PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
+            const pinStr = String(enteredPin || '').trim();
+            if (!/^\d{4,6}$/.test(pinStr)) {
+                return { success: false, message: "PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+            }
+
+            // 3. Firestore నుండి డేటా
             const schoolDoc = await db.collection('schoolInfo').doc('main').get();
             if (!schoolDoc.exists) {
                 return { success: false, message: "స్కూల్ సెటప్ పూర్తి కాలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
@@ -19,7 +27,11 @@ const Auth = {
 
             const schoolData = schoolDoc.data();
 
-            if (schoolData.hmPin !== enteredPin) {
+            // 4. PIN Compare — Type-safe (string/number రెండూ పని చేస్తాయి)
+            const storedPin = String(schoolData.hmPin || '').trim();
+
+            if (storedPin !== pinStr) {
+                // తప్పు PIN — fail count పెంచు
                 const failCount = parseInt(localStorage.getItem('dm_fail_count') || '0') + 1;
                 localStorage.setItem('dm_fail_count', failCount);
 
@@ -31,10 +43,11 @@ const Auth = {
                 return { success: false, message: `తప్పు PIN. (${failCount}/5)`, failCount };
             }
 
+            // 5. విజయం — fail count రీసెట్
             localStorage.removeItem('dm_fail_count');
             localStorage.removeItem('dm_lock_until');
 
-            // Device Lock — ✅ ఇప్పుడు మొదటిసారి login లో deviceId సేవ్ అవుతుంది
+            // 6. Device Lock
             const thisDevice = this.getDeviceId();
             if (!schoolData.allowedDeviceId) {
                 // మొదటిసారి login — deviceId సేవ్ చేయి
@@ -43,6 +56,7 @@ const Auth = {
                 return { success: false, message: "ఈ పరికరం అనుమతించబడలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
             }
 
+            // 7. Session సేవ్
             this.setSession('headmaster', schoolData.hmName, 'HM');
             return { success: true, message: "లాగిన్ విజయవంతమైంది!" };
 
@@ -53,10 +67,17 @@ const Auth = {
     },
 
     // =====================================================
-    // HM SETUP
+    // HM SETUP — 4 నుండి 6 అంకెల PIN సపోర్ట్
     // =====================================================
     setupHM: async function(setupData) {
         try {
+            // 1. PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
+            const pinStr = String(setupData.hmPin || '').trim();
+            if (!/^\d{4,6}$/.test(pinStr)) {
+                return { success: false, message: "PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+            }
+
+            // 2. Valiass Code validation: 5 ఫీల్డ్స్ చివరి అక్షరం + @533340
             const lastChars =
                 (setupData.district || '').slice(-1) +
                 (setupData.mandal || '').slice(-1) +
@@ -69,25 +90,26 @@ const Auth = {
                 return { success: false, message: "Valiass Setup Code తప్పు. మళ్లీ చెక్ చేయండి." };
             }
 
-            // ✅ deviceId ముందే generate చేయి
+            // 3. Device ID generate
             const deviceId = this.getDeviceId();
 
+            // 4. Firestore లో సేవ్
             await db.collection('schoolInfo').doc('main').set({
                 schoolName: setupData.school,
                 district: setupData.district,
                 mandal: setupData.mandal,
                 village: setupData.village,
                 hmName: setupData.hmName,
-                hmPin: setupData.hmPin,
+                hmPin: pinStr,
                 valiassCode: setupData.valiassCode,
                 isSetupComplete: true,
                 allowedDeviceId: deviceId,
-                // ✅ hmDob — reset కోసం (Valiass టీమ్ Firestore Console లో సెట్ చేస్తుంది)
                 hmDob: null,
                 sections: { teacher: false, cook: false, parent: false, office: false },
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
+            // 5. Session సేవ్
             this.setSession('headmaster', setupData.hmName, 'HM');
             return { success: true, message: "సెటప్ విజయవంతమైంది!" };
 
@@ -102,6 +124,13 @@ const Auth = {
     // =====================================================
     resetHMPin: async function(resetCode, newPin) {
         try {
+            // 1. కొత్త PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
+            const newPinStr = String(newPin || '').trim();
+            if (!/^\d{4,6}$/.test(newPinStr)) {
+                return { success: false, message: "కొత్త PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+            }
+
+            // 2. School data
             const schoolDoc = await db.collection('schoolInfo').doc('main').get();
             if (!schoolDoc.exists) {
                 return { success: false, message: "స్కూల్ సెటప్ పూర్తి కాలేదు." };
@@ -114,12 +143,14 @@ const Auth = {
                 return { success: false, message: "HM DOB రికార్డ్ లేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
             }
 
-            const expectedReset = '919720-' + dob;
-            if (resetCode !== expectedReset) {
+            // 3. Reset code ఫార్ములా: 919720-ddmmyy
+            const expectedReset = '919720-' + String(dob).trim();
+            if (String(resetCode || '').trim() !== expectedReset) {
                 return { success: false, message: "రీసెట్ కోడ్ తప్పు." };
             }
 
-            await db.collection('schoolInfo').doc('main').update({ hmPin: newPin });
+            // 4. PIN అప్‌డేట్
+            await db.collection('schoolInfo').doc('main').update({ hmPin: newPinStr });
             localStorage.removeItem('dm_fail_count');
             localStorage.removeItem('dm_lock_until');
             return { success: true, message: "PIN విజయవంతంగా రీసెట్ అయ్యింది!" };
@@ -131,7 +162,7 @@ const Auth = {
     },
 
     // =====================================================
-    // SESSION
+    // SESSION MANAGEMENT
     // =====================================================
     setSession: function(role, name, displayRole) {
         const sessionData = { role, name, displayRole, loginTime: new Date().getTime() };
