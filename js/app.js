@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 async function checkAccess(role) {
     try {
+        // ✅ Auth పూర్తి అయ్యే వరకు వేచి ఉండు
+        if (typeof authReady !== 'undefined') {
+            await authReady;
+        }
+
         // డేటాబేస్ నుంచి స్కూల్ సమాచారం తీసుకోవడం
         const schoolDoc = await db.collection('schoolInfo').doc('main').get();
         const data = schoolDoc.exists ? schoolDoc.data() : null;
