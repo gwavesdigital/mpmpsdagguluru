@@ -1,11 +1,11 @@
 // js/auth.js
 const Auth = {
+
     // =====================================================
-    // HM LOGIN (PIN చెక్ + Lockout + Device Lock)
+    // HM LOGIN
     // =====================================================
     loginHM: async function(enteredPin) {
         try {
-            // 1. Lockout చెక్
             const lockUntil = parseInt(localStorage.getItem('dm_lock_until') || '0');
             if (Date.now() < lockUntil) {
                 const remaining = Math.ceil((lockUntil - Date.now()) / 1000);
@@ -13,16 +13,13 @@ const Auth = {
             }
 
             const schoolDoc = await db.collection('schoolInfo').doc('main').get();
-
             if (!schoolDoc.exists) {
                 return { success: false, message: "స్కూల్ సెటప్ పూర్తి కాలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
             }
 
             const schoolData = schoolDoc.data();
 
-            // 2. PIN చెక్
             if (schoolData.hmPin !== enteredPin) {
-                // తప్పు PIN — fail count పెంచు
                 const failCount = parseInt(localStorage.getItem('dm_fail_count') || '0') + 1;
                 localStorage.setItem('dm_fail_count', failCount);
 
@@ -31,23 +28,21 @@ const Auth = {
                     localStorage.setItem('dm_fail_count', '0');
                     return { success: false, message: "5 సార్లు తప్పు PIN. 60 సెకన్ల లాక్.", failCount: 5 };
                 }
-
                 return { success: false, message: `తప్పు PIN. (${failCount}/5)`, failCount };
             }
 
-            // 3. విజయవంతం — fail count రీసెట్
             localStorage.removeItem('dm_fail_count');
             localStorage.removeItem('dm_lock_until');
 
-            // 4. Device Lock చెక్ (ఒకవేళ allowedDeviceId సెట్ అయ్యి ఉంటే)
-            if (schoolData.allowedDeviceId) {
-                const thisDevice = this.getDeviceId();
-                if (schoolData.allowedDeviceId !== thisDevice) {
-                    return { success: false, message: "ఈ పరికరం అనుమతించబడలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
-                }
+            // Device Lock — ✅ ఇప్పుడు మొదటిసారి login లో deviceId సేవ్ అవుతుంది
+            const thisDevice = this.getDeviceId();
+            if (!schoolData.allowedDeviceId) {
+                // మొదటిసారి login — deviceId సేవ్ చేయి
+                await db.collection('schoolInfo').doc('main').update({ allowedDeviceId: thisDevice });
+            } else if (schoolData.allowedDeviceId !== thisDevice) {
+                return { success: false, message: "ఈ పరికరం అనుమతించబడలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
             }
 
-            // 5. Session సేవ్
             this.setSession('headmaster', schoolData.hmName, 'HM');
             return { success: true, message: "లాగిన్ విజయవంతమైంది!" };
 
@@ -58,11 +53,10 @@ const Auth = {
     },
 
     // =====================================================
-    // HM SETUP (మొదటిసారి — 5 ఫీల్డ్స్ + Valiass Code + PIN)
+    // HM SETUP
     // =====================================================
     setupHM: async function(setupData) {
         try {
-            // Valiass Code validation: 5 ఫీల్డ్స్ చివరి అక్షరం + @533340
             const lastChars =
                 (setupData.district || '').slice(-1) +
                 (setupData.mandal || '').slice(-1) +
@@ -71,12 +65,13 @@ const Auth = {
                 (setupData.hmName || '').slice(-1);
 
             const expectedCode = lastChars + '@533340';
-
             if (setupData.valiassCode !== expectedCode) {
                 return { success: false, message: "Valiass Setup Code తప్పు. మళ్లీ చెక్ చేయండి." };
             }
 
-            // Firestore లో సేవ్
+            // ✅ deviceId ముందే generate చేయి
+            const deviceId = this.getDeviceId();
+
             await db.collection('schoolInfo').doc('main').set({
                 schoolName: setupData.school,
                 district: setupData.district,
@@ -86,12 +81,13 @@ const Auth = {
                 hmPin: setupData.hmPin,
                 valiassCode: setupData.valiassCode,
                 isSetupComplete: true,
-                allowedDeviceId: this.getDeviceId(),
+                allowedDeviceId: deviceId,
+                // ✅ hmDob — reset కోసం (Valiass టీమ్ Firestore Console లో సెట్ చేస్తుంది)
+                hmDob: null,
                 sections: { teacher: false, cook: false, parent: false, office: false },
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // Session సేవ్
             this.setSession('headmaster', setupData.hmName, 'HM');
             return { success: true, message: "సెటప్ విజయవంతమైంది!" };
 
@@ -102,7 +98,7 @@ const Auth = {
     },
 
     // =====================================================
-    // HM PIN RESET (919720 - ddmmyy ఫార్ములా)
+    // HM PIN RESET
     // =====================================================
     resetHMPin: async function(resetCode, newPin) {
         try {
@@ -112,7 +108,7 @@ const Auth = {
             }
 
             const schoolData = schoolDoc.data();
-            const dob = schoolData.hmDob; // HM DOB (ddmmyy ఫార్మాట్ లో సేవ్ చేసి ఉండాలి)
+            const dob = schoolData.hmDob;
 
             if (!dob) {
                 return { success: false, message: "HM DOB రికార్డ్ లేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
@@ -135,7 +131,7 @@ const Auth = {
     },
 
     // =====================================================
-    // SESSION MANAGEMENT
+    // SESSION
     // =====================================================
     setSession: function(role, name, displayRole) {
         const sessionData = { role, name, displayRole, loginTime: new Date().getTime() };
@@ -162,7 +158,7 @@ const Auth = {
     },
 
     // =====================================================
-    // DEVICE ID (Device Lock కోసం)
+    // DEVICE ID
     // =====================================================
     getDeviceId: function() {
         let id = localStorage.getItem('dm_device_id');
