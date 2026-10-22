@@ -2,7 +2,7 @@
 const Auth = {
 
     // =====================================================
-    // HM LOGIN — 6 అంకెల PIN సపోర్ట్
+    // HM LOGIN — 6 అంకెల PIN మాత్రమే
     // =====================================================
     loginHM: async function(enteredPin) {
         try {
@@ -13,9 +13,12 @@ const Auth = {
                 return { success: false, message: `లాక్ అయ్యింది. ${remaining} సెకన్ల తర్వాత ప్రయత్నించండి.` };
             }
 
-            // ✅ కొత్త
+            // ✅ pinStr ఇక్కడ డిఫైన్ చేయి
+            const pinStr = String(enteredPin || '').trim();
+
+            // 2. PIN ఫార్మాట్ చెక్ — 6 అంకెలు మాత్రమే
             if (!/^\d{6}$/.test(pinStr)) {
-            return { success: false, message: "PIN 6 అంకెలు ఉండాలి." };
+                return { success: false, message: "PIN 6 అంకెలు ఉండాలి." };
             }
 
             // 3. Firestore నుండి డేటా
@@ -26,11 +29,10 @@ const Auth = {
 
             const schoolData = schoolDoc.data();
 
-            // 4. PIN Compare — Type-safe (string/number రెండూ పని చేస్తాయి)
+            // 4. PIN Compare — Type-safe
             const storedPin = String(schoolData.hmPin || '').trim();
 
             if (storedPin !== pinStr) {
-                // తప్పు PIN — fail count పెంచు
                 const failCount = parseInt(localStorage.getItem('dm_fail_count') || '0') + 1;
                 localStorage.setItem('dm_fail_count', failCount);
 
@@ -49,7 +51,6 @@ const Auth = {
             // 6. Device Lock
             const thisDevice = this.getDeviceId();
             if (!schoolData.allowedDeviceId) {
-                // మొదటిసారి login — deviceId సేవ్ చేయి
                 await db.collection('schoolInfo').doc('main').update({ allowedDeviceId: thisDevice });
             } else if (schoolData.allowedDeviceId !== thisDevice) {
                 return { success: false, message: "ఈ పరికరం అనుమతించబడలేదు. వాలియాస్ టీమ్ ని సంప్రదించండి." };
@@ -66,17 +67,19 @@ const Auth = {
     },
 
     // =====================================================
-    // HM SETUP — 4 నుండి 6 అంకెల PIN సపోర్ట్
+    // HM SETUP — 6 అంకెల PIN మాత్రమే
     // =====================================================
     setupHM: async function(setupData) {
         try {
-            // 1. PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
+            // ✅ pinStr ఇక్కడ డిఫైన్ చేయి
             const pinStr = String(setupData.hmPin || '').trim();
-            if (!/^\d{4,6}$/.test(pinStr)) {
-                return { success: false, message: "PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+
+            // 1. PIN ఫార్మాట్ చెక్ — 6 అంకెలు మాత్రమే
+            if (!/^\d{6}$/.test(pinStr)) {
+                return { success: false, message: "PIN 6 అంకెలు ఉండాలి." };
             }
 
-            // 2. Valiass Code validation: 5 ఫీల్డ్స్ చివరి అక్షరం + @533340
+            // 2. Valiass Code validation
             const lastChars =
                 (setupData.district || '').slice(-1) +
                 (setupData.mandal || '').slice(-1) +
@@ -89,7 +92,7 @@ const Auth = {
                 return { success: false, message: "Valiass Setup Code తప్పు. మళ్లీ చెక్ చేయండి." };
             }
 
-            // 3. Device ID generate
+            // 3. Device ID
             const deviceId = this.getDeviceId();
 
             // 4. Firestore లో సేవ్
@@ -108,7 +111,7 @@ const Auth = {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // 5. Session సేవ్
+            // 5. Session
             this.setSession('headmaster', setupData.hmName, 'HM');
             return { success: true, message: "సెటప్ విజయవంతమైంది!" };
 
@@ -119,14 +122,16 @@ const Auth = {
     },
 
     // =====================================================
-    // HM PIN RESET
+    // HM PIN RESET — 6 అంకెల PIN మాత్రమే
     // =====================================================
     resetHMPin: async function(resetCode, newPin) {
         try {
-            // 1. కొత్త PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
+            // ✅ newPinStr ఇక్కడ డిఫైన్ చేయి
             const newPinStr = String(newPin || '').trim();
-            if (!/^\d{4,6}$/.test(newPinStr)) {
-                return { success: false, message: "కొత్త PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+
+            // 1. కొత్త PIN ఫార్మాట్ చెక్ — 6 అంకెలు మాత్రమే
+            if (!/^\d{6}$/.test(newPinStr)) {
+                return { success: false, message: "కొత్త PIN 6 అంకెలు ఉండాలి." };
             }
 
             // 2. School data
