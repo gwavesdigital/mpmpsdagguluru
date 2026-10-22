@@ -146,13 +146,13 @@ function bindEvents() {
         });
     }
 
-    // ✅ Login PIN — 4 లేదా 6 అంకెలు auto-submit
+    // ✅ LOGIN PIN — 6 అంకెలు మాత్రమే auto-submit (919720 కోసం)
     const loginPin = document.getElementById('loginPin');
     if (loginPin) {
         loginPin.addEventListener('input', () => {
             loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 6);
-            // 4 అంకెలు అయినా, 6 అంకెలు అయినా auto-submit
-            if (loginPin.value.length === 4 || loginPin.value.length === 6) {
+            // 6 అంకెలు అయ్యాక మాత్రమే auto-submit
+            if (loginPin.value.length === 6) {
                 setTimeout(() => handleLogin(), 300);
             }
         });
@@ -215,7 +215,7 @@ function bindEvents() {
 function updatePinDots(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    // Container ఖాళీగా ఉంటే 6 dots క్రియేట్ చేయి (6 అంకెల PIN కి)
+    // Container ఖాళీగా ఉంటే 6 dots క్రియేట్ చేయి
     if (container.children.length === 0) {
         for (let i = 0; i < 6; i++) {
             const dot = document.createElement('span');
