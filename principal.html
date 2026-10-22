@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HM Portal - Digital Manabadi</title>
+    <title>HM Dashboard - Digital Manabadi</title>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,261 +12,227 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
-<body class="not-logged-in" style="background: var(--bg-color);">
+<body>
 
-    <div class="app-container" id="app-container" style="display: flex; flex-direction: column;">
-        
-        <header class="app-header" style="background: transparent; box-shadow: none; border: none; padding-top: 20px;">
-            <div class="header-left">
-                <button class="header-btn" onclick="window.location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-            </div>
-            <div class="header-title"></div>
-            <div class="header-right"></div>
-        </header>
+    <div class="app-container" id="app-container" style="display: none;">
+        <header id="app-header" class="app-header"></header>
 
-        <main class="main-content" style="display: flex; flex-direction: column; justify-content: center; padding: 20px;">
+        <main class="main-content">
             
-            <div id="view-loading" style="text-align: center; color: var(--primary);">
-                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 10px;"></i>
-                <h3>Loading...</h3>
+            <!-- Welcome Banner -->
+            <div class="card" style="background: linear-gradient(135deg, var(--primary), #2E7D32); color: white; border: none; border-radius: 16px; box-shadow: 0 8px 20px rgba(27, 94, 32, 0.3);">
+                <h2 style="margin-bottom: 4px; font-size: 1.5rem;">నమస్కారం, <span id="hm-name-display">Headmaster</span> గారు</h2>
+                <p style="font-size: 0.9rem; opacity: 0.9;">Welcome to Headmaster Dashboard</p>
             </div>
 
-            <!-- View 1: Setup Form -->
-            <div id="view-setup" class="premium-card" style="display: none;">
-                <div class="premium-card-icon" style="background: linear-gradient(135deg, #FFC107, #FF9800);">
-                    <i class="fas fa-school"></i>
+            <!-- 1. Section Toggles -->
+            <h3 style="margin: var(--space-lg) 0 var(--space-sm) 0; color: var(--text-main); font-size: 1.1rem; font-weight: 700;">Section Control (నియంత్రణ)</h3>
+            
+            <div class="card" style="padding: var(--space-md); margin-bottom: var(--space-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                    <span style="font-weight: 600; font-size: 1rem;">Teacher Section</span>
+                    <label class="switch"><input type="checkbox" id="toggle-teacher"><span class="slider round"></span></label>
                 </div>
-                <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
-                    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">School Setup</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                    <span style="font-weight: 600; font-size: 1rem;">Cook Section</span>
+                    <label class="switch"><input type="checkbox" id="toggle-cook"><span class="slider round"></span></label>
                 </div>
-
-                <form id="setup-form">
-                    <div class="form-group">
-                        <select id="district" class="form-control" required>
-                            <option value="">Select District</option>
-                            <option value="Krishna">Krishna</option>
-                            <option value="Guntur">Guntur</option>
-                            <option value="West Godavari">West Godavari</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><input type="text" id="mandal" class="form-control" placeholder="Mandal (మండలం)" required></div>
-                    <div class="form-group"><input type="text" id="village" class="form-control" placeholder="Village (గ్రామం)" required></div>
-                    <!-- Updated to Headmaster Name -->
-                    <div class="form-group"><input type="text" id="hmName" class="form-control" placeholder="Headmaster Name (HM పేరు)" required></div>
-                    
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fas fa-shield-alt input-icon"></i>
-                            <input type="password" id="valiassCode" class="form-control" placeholder="Valiass Secret Code" required>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border-color);">
-                        <label class="form-label" style="color: var(--primary); font-weight: 700;"><i class="fas fa-key"></i> Set Your 6-Digit PIN</label>
-                        <div class="input-group">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" id="setup-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-glow" id="setup-btn" style="margin-top: 15px;">Confirm & Save Setup</button>
-                </form>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; font-size: 1rem;">Parent Section</span>
+                    <label class="switch"><input type="checkbox" id="toggle-parent"><span class="slider round"></span></label>
+                </div>
             </div>
 
-            <!-- View 2: Login Form -->
-            <div id="view-login" class="premium-card" style="display: none;">
-                <div class="premium-card-icon"><i class="fas fa-user-shield"></i></div>
-                <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
-                    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Welcome Back</h2>
-                    <!-- Updated to Headmaster -->
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">Headmaster Login (హెచ్‌ఎం లాగిన్)</p>
+            <!-- 2. Management Links -->
+            <h3 style="margin: var(--space-lg) 0 var(--space-sm) 0; color: var(--text-main); font-size: 1.1rem; font-weight: 700;">Management (నిర్వహణ)</h3>
+            
+            <!-- Manage Staff (PATA FUNCTION - SAFE) -->
+            <div class="card" onclick="window.location.href='hm-staff.html'" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Manage Staff</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">టీచర్స్ మరియు కుక్ నిర్వహణ</p>
+                    </div>
                 </div>
-                <form id="hm-login-form">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" id="hm-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
-                            <button type="button" class="toggle-pin-btn" onclick="togglePinVisibility('hm-pin', 'pin-eye-icon')">
-                                <i class="fas fa-eye" id="pin-eye-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-glow" id="login-btn" style="margin-top: 10px;">Login</button>
-                    
-                    <!-- Forgot PIN Option -->
-                    <div style="text-align: center; margin-top: 15px;">
-                        <a href="#" onclick="showResetView()" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none; font-weight: 600;">
-                            Forgot PIN? (పిన్ మర్చిపోయారా?)
-                        </a>
-                    </div>
-                </form>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
             </div>
 
-            <!-- View 3: Reset PIN Form -->
-            <div id="view-reset" class="premium-card" style="display: none;">
-                <div class="premium-card-icon" style="background: linear-gradient(135deg, #D32F2F, #B71C1C);"><i class="fas fa-unlock-alt"></i></div>
-                <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
-                    <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Reset PIN</h2>
+            <!-- Manage Classrooms (New) -->
+            <div class="card" onclick="window.location.href='hm-classrooms.html'" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem;">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Manage Classrooms</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">తరగతులు మరియు విద్యార్థులు</p>
+                    </div>
                 </div>
-                
-                <!-- Secret Hint Removed. Only Contact Info -->
-                <div style="background: rgba(211, 47, 47, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(211, 47, 47, 0.2);">
-                    <p style="font-size: 0.85rem; color: var(--danger); text-align: center; margin: 0; line-height: 1.4;">
-                        <b>సూచన:</b> మీ పిన్ మర్చిపోయినట్లయితే, దయచేసి <b> @Valiass Team )</b> ని సంప్రదించి రీసెట్ కోడ్ పొందండి. ఆ కోడ్ ని ఇక్కడ ఎంటర్ చేసి కొత్త పిన్ సెట్ చేసుకోండి.
-                    </p>
-                </div>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
 
-                <form id="reset-form">
-                    <div class="form-group">
-                        <label class="form-label">Valiass Reset Code</label>
-                        <div class="input-group">
-                            <i class="fas fa-shield-alt input-icon"></i>
-                            <input type="text" id="reset-code" class="form-control" placeholder="@valiass team code" required>
-                        </div>
+            <!-- Approvals (New) -->
+            <div class="card" onclick="window.location.href='hm-approvals.html'" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem;">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">New 6-Digit PIN</label>
-                        <div class="input-group">
-                            <i class="fas fa-key input-icon"></i>
-                            <input type="password" id="reset-new-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
-                            <button type="button" class="toggle-pin-btn" onclick="togglePinVisibility('reset-new-pin', 'reset-pin-eye-icon')">
-                                <i class="fas fa-eye" id="reset-pin-eye-icon"></i>
-                            </button>
-                        </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Approvals</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">డైరీ మరియు అటెండెన్స్</p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-glow" id="reset-btn" style="margin-top: 10px;">Reset PIN</button>
-                    <div style="text-align: center; margin-top: 15px;">
-                        <a href="#" onclick="showLoginView()" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">Back to Login</a>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
+            
+            <!-- Notice Board (New) -->
+            <div class="card" onclick="window.location.href='hm-notice.html'" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem;">
+                        <i class="fas fa-bullhorn"></i>
                     </div>
-                </form>
+                    <div>
+                        <h4 style="font-size: 1rem;">Notice Board</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">నోటీసులు మరియు బర్త్‌డేలు</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
+
+            <!-- 3. Settings (PATA FUNCTION - SAFE) -->
+            <h3 style="margin: var(--space-lg) 0 var(--space-sm) 0; color: var(--text-main); font-size: 1.1rem; font-weight: 700;">Settings (సెట్టింగ్స్)</h3>
+            
+            <div class="card" onclick="openPinModal()" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: var(--space-xl);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(27,94,32,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem;">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1rem;">Change PIN</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">మీ పిన్ మార్చుకోండి</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
             </div>
 
         </main>
-        <footer id="app-footer" class="app-footer" style="background: transparent; border: none;"></footer>
+
+        <footer id="app-footer" class="app-footer"></footer>
+    </div>
+
+    <!-- Change PIN Modal (PATA FUNCTION - SAFE) -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: var(--space-md); color: var(--primary); font-weight: 700;">Change PIN</h3>
+            <div class="form-group">
+                <label class="form-label">Current PIN (పాత పిన్)</label>
+                <input type="password" id="old-pin" class="form-control" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" style="text-align: center; letter-spacing: 5px;">
+            </div>
+            <div class="form-group">
+                <label class="form-label">New 6-Digit PIN (కొత్త పిన్)</label>
+                <input type="password" id="new-pin" class="form-control" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" style="text-align: center; letter-spacing: 5px;">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: var(--space-lg);">
+                <button class="btn btn-outline" onclick="closePinModal()">Cancel</button>
+                <button class="btn btn-primary" id="save-pin-btn" onclick="saveNewPin()">Save</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/config.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        UI.initLayout();
-        document.getElementById('app-container').style.display = 'flex'; 
+        // 1. Auth Check
+        const session = Auth.checkAuth('headmaster');
+        if (!session) { window.location.href = 'index.html'; } 
+        else {
+            document.getElementById('app-container').style.display = 'flex';
+            UI.initLayout();
+            document.getElementById('hm-name-display').innerText = session.name;
+        }
 
-        const viewLoading = document.getElementById('view-loading');
-        const viewSetup = document.getElementById('view-setup');
-        const viewLogin = document.getElementById('view-login');
-        const viewReset = document.getElementById('view-reset');
+        // 2. Load Section Toggles from Database
+        async function loadToggles() {
+            try {
+                const doc = await db.collection('schoolInfo').doc('main').get();
+                if(doc.exists) {
+                    const sections = doc.data().sections || { teacher: false, cook: false, parent: false };
+                    document.getElementById('toggle-teacher').checked = sections.teacher;
+                    document.getElementById('toggle-cook').checked = sections.cook;
+                    document.getElementById('toggle-parent').checked = sections.parent;
+                }
+            } catch(error) { console.error("Error loading toggles:", error); }
+        }
+        loadToggles();
 
-        function togglePinVisibility(inputId, iconId) {
-            const pinInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById(iconId);
-            if (pinInput.type === 'password') {
-                pinInput.type = 'text';
-                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pinInput.type = 'password';
-                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+        // 3. Update Toggles in Database on change
+        async function updateToggle(section, isChecked) {
+            try {
+                await db.collection('schoolInfo').doc('main').update({
+                    [`sections.${section}`]: isChecked
+                });
+            } catch(error) {
+                alert("Failed to update status. Check internet.");
+                document.getElementById(`toggle-${section}`).checked = !isChecked; // Revert
             }
         }
 
-        function showResetView() { viewLogin.style.display = 'none'; viewReset.style.display = 'block'; }
-        function showLoginView() { viewReset.style.display = 'none'; viewLogin.style.display = 'block'; }
+        document.getElementById('toggle-teacher').addEventListener('change', (e) => updateToggle('teacher', e.target.checked));
+        document.getElementById('toggle-cook').addEventListener('change', (e) => updateToggle('cook', e.target.checked));
+        document.getElementById('toggle-parent').addEventListener('change', (e) => updateToggle('parent', e.target.checked));
 
-        async function checkSchoolStatus() {
-            try {
-                const doc = await db.collection('schoolInfo').doc('main').get();
-                viewLoading.style.display = 'none';
-                if (doc.exists && doc.data().isSetupComplete && doc.data().hmPin) {
-                    viewLogin.style.display = 'block'; 
-                } else {
-                    viewSetup.style.display = 'block'; 
-                }
-            } catch (error) { viewLoading.innerHTML = `<p style="color:red;">Error connecting.</p>`; }
+        // 4. Change PIN Modal (PATA FUNCTION - SAFE)
+        function openPinModal() { 
+            if (navigator.vibrate) navigator.vibrate(30);
+            document.getElementById('pin-modal').classList.add('active'); 
         }
-        checkSchoolStatus();
+        
+        function closePinModal() { 
+            document.getElementById('pin-modal').classList.remove('active'); 
+            document.getElementById('old-pin').value = ''; 
+            document.getElementById('new-pin').value = ''; 
+        }
 
-        // Setup Form
-        document.getElementById('setup-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('setup-btn');
+        async function saveNewPin() {
+            const oldPin = document.getElementById('old-pin').value;
+            const newPin = document.getElementById('new-pin').value;
+            const btn = document.getElementById('save-pin-btn');
+
+            if (oldPin.length !== 6 || newPin.length !== 6) { alert("⚠️ పిన్ తప్పనిసరిగా 6 అంకెలు ఉండాలి!"); return; }
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             btn.disabled = true;
 
-            const secretCode = document.getElementById('valiassCode').value.trim();
-            const setupPin = document.getElementById('setup-pin').value.trim();
-            
-            if (secretCode !== '@533340') { alert("❌ తప్పు వాల్యూ సీక్రెట్ కోడ్!"); btn.innerHTML = 'Confirm'; btn.disabled = false; return; }
-            if (setupPin.length !== 6) { alert("❌ పిన్ 6 అంకెలు ఉండాలి!"); btn.innerHTML = 'Confirm'; btn.disabled = false; return; }
-
             try {
-                await db.collection('schoolInfo').doc('main').set({
-                    district: document.getElementById('district').value,
-                    mandal: document.getElementById('mandal').value,
-                    village: document.getElementById('village').value,
-                    schoolName: "MP MPS Dagguluru",
-                    hmName: document.getElementById('hmName').value,
-                    valiassCode: secretCode,
-                    isSetupComplete: true,
-                    hmPin: setupPin,
-                    sections: { teacher: false, cook: false, parent: false, office: false },
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                alert("✅ Setup Successful! Please login.");
-                viewSetup.style.display = 'none';
-                viewLogin.style.display = 'block'; 
-            } catch (error) { alert("❌ Failed: " + error.message); btn.innerHTML = 'Confirm'; btn.disabled = false; }
-        });
-
-        // Login Form
-        document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const pin = document.getElementById('hm-pin').value;
-            const btn = document.getElementById('login-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-            btn.disabled = true;
-
-            const result = await Auth.loginHM(pin);
-            if (result.success) { window.location.href = 'hm-dashboard.html'; } 
-            else { alert("❌ " + result.message); btn.innerHTML = 'Login'; btn.disabled = false; }
-        });
-
-        // Reset PIN Form (Secret Logic Calculation)
-        document.getElementById('reset-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('reset-btn');
-            const resetCode = document.getElementById('reset-code').value.trim();
-            const newPin = document.getElementById('reset-new-pin').value.trim();
-
-            // ఈరోజు తేదీని ddmmyy ఫార్మాట్ లోకి మార్చడం (ఇది స్క్రీన్ పైన కనిపించదు)
-            const today = new Date();
-            const dd = String(today.getDate()).padStart(2, '0');
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const yy = String(today.getFullYear()).slice(-2);
-            const ddmmyy = parseInt(dd + mm + yy);
-            
-            // వాల్యూ రీసెట్ కోడ్ ఫార్ములా: 919720 - ddmmyy
-            const expectedCode = String(919720 - ddmmyy);
-
-            if (resetCode !== expectedCode) {
-                alert(`❌ తప్పు రీసెట్ కోడ్!\nదయచేసి వాల్యూ టీమ్ ఇచ్చిన కోడ్ సరిగ్గా ఉందో లేదో చెక్ చేయండి.`);
-                return;
-            }
-
-            if (newPin.length !== 6) { alert("❌ కొత్త పిన్ 6 అంకెలు ఉండాలి!"); return; }
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting...';
-            btn.disabled = true;
-
-            try {
+                const schoolDoc = await db.collection('schoolInfo').doc('main').get();
+                if (schoolDoc.data().hmPin !== oldPin) {
+                    alert("❌ పాత పిన్ తప్పు ఉంది!"); btn.innerHTML = 'Save'; btn.disabled = false; return;
+                }
                 await db.collection('schoolInfo').doc('main').update({ hmPin: newPin });
-                alert("✅ PIN విజయవంతంగా రీసెట్ అయ్యింది! కొత్త పిన్ తో లాగిన్ అవ్వండి.");
-                showLoginView();
-                btn.innerHTML = 'Reset PIN';
-                btn.disabled = false;
+                alert("✅ పిన్ విజయవంతంగా మార్చబడింది!");
+                closePinModal();
             } catch (error) {
-                alert("❌ Error: " + error.message);
-                btn.innerHTML = 'Reset PIN';
-                btn.disabled = false;
+                console.error("Error updating PIN:", error);
+                alert("❌ లోపం జరిగింది. మళ్ళీ ప్రయత్నించండి.");
+            } finally {
+                btn.innerHTML = 'Save'; btn.disabled = false;
             }
-        });
+        }
     </script>
+
+    <!-- CSS for Toggle Switch (Safe to add here) -->
+    <style>
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+        .slider.round { border-radius: 34px; }
+        .slider.round:before { border-radius: 50%; }
+    </style>
 </body>
 </html>
