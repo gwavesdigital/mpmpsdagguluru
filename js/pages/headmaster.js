@@ -69,7 +69,7 @@ async function decideScreen() {
 }
 
 // =====================================================
-// SCREEN SWITCHER
+// SCREEN SWITCHER — Header buttons visibility కూడా
 // =====================================================
 function showScreen(name) {
     currentScreen = name;
@@ -80,12 +80,22 @@ function showScreen(name) {
     const target = document.getElementById('screen' + capitalize(name));
     if (target) target.classList.remove('hidden');
 
+    // ✅ Back button — reset స్క్రీన్ లో మాత్రమే
     const backBtn = document.getElementById('backBtn');
     if (backBtn) {
         if (name === 'reset') backBtn.classList.remove('hidden');
         else backBtn.classList.add('hidden');
     }
 
+    // ✅ Logout button — login తర్వాత మాత్రమే (ఇక్కడ కనిపించదు)
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.classList.add('hidden');
+
+    // ✅ Theme button — setup/login/reset లో కనిపిస్తుంది
+    const themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) themeBtn.classList.remove('hidden');
+
+    // Page title
     const title = document.getElementById('pageTitle');
     if (title) {
         title.textContent = {
@@ -104,6 +114,7 @@ function capitalize(s) {
 // EVENT BINDINGS
 // =====================================================
 function bindEvents() {
+    // ✅ Theme button
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) {
         themeBtn.addEventListener('click', () => {
@@ -113,11 +124,32 @@ function bindEvents() {
         });
     }
 
+    // ✅ Back button — వెనక్కి వెళ్లడానికి
     const backBtn = document.getElementById('backBtn');
     if (backBtn) {
-        backBtn.addEventListener('click', () => showScreen('login'));
+        backBtn.addEventListener('click', () => {
+            if (currentScreen === 'reset') {
+                showScreen('login');
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
     }
 
+    // ✅ Logout button — session clear చేసి home కి
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            if (typeof Auth !== 'undefined') {
+                Auth.logout();
+            } else {
+                localStorage.removeItem('dm_session');
+                window.location.href = 'index.html';
+            }
+        });
+    }
+
+    // PIN show/hide toggles
     document.querySelectorAll('.pin-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
             const targetId = btn.getAttribute('data-target');
@@ -129,7 +161,7 @@ function bindEvents() {
         });
     });
 
-    // ✅ Setup PIN — 6 అంకెలు మాత్రమే
+    // Setup PIN — 6 అంకెలు
     const setupPin = document.getElementById('setupHmPin');
     if (setupPin) {
         setupPin.addEventListener('input', () => {
@@ -138,7 +170,7 @@ function bindEvents() {
         });
     }
 
-    // ✅ Setup PIN Confirm — 6 అంకెలు మాత్రమే
+    // Setup PIN Confirm
     const setupPinConfirm = document.getElementById('setupHmPinConfirm');
     if (setupPinConfirm) {
         setupPinConfirm.addEventListener('input', () => {
@@ -146,18 +178,15 @@ function bindEvents() {
         });
     }
 
-    // ✅ LOGIN PIN — 6 అంకెలు మాత్రమే auto-submit
+    // ✅ LOGIN PIN — Auto-submit తీసేయబడింది (Enter/Button కోసం)
     const loginPin = document.getElementById('loginPin');
     if (loginPin) {
         loginPin.addEventListener('input', () => {
             loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 6);
-            if (loginPin.value.length === 6) {
-                setTimeout(() => handleLogin(), 300);
-            }
         });
     }
 
-    // ✅ Reset New PIN — 6 అంకెలు మాత్రమే
+    // Reset New PIN
     const resetNewPin = document.getElementById('resetNewPin');
     if (resetNewPin) {
         resetNewPin.addEventListener('input', () => {
@@ -165,7 +194,7 @@ function bindEvents() {
         });
     }
 
-    // ✅ Reset New PIN Confirm — 6 అంకెలు మాత్రమే
+    // Reset New PIN Confirm
     const resetNewPinConfirm = document.getElementById('resetNewPinConfirm');
     if (resetNewPinConfirm) {
         resetNewPinConfirm.addEventListener('input', () => {
@@ -173,6 +202,7 @@ function bindEvents() {
         });
     }
 
+    // Setup form
     const setupForm = document.getElementById('setupForm');
     if (setupForm) {
         setupForm.addEventListener('submit', (e) => {
@@ -181,6 +211,7 @@ function bindEvents() {
         });
     }
 
+    // ✅ Login form — Enter నొక్కినా submit అవుతుంది
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -189,11 +220,13 @@ function bindEvents() {
         });
     }
 
+    // Forgot PIN
     const forgotBtn = document.getElementById('forgotPinBtn');
     if (forgotBtn) {
         forgotBtn.addEventListener('click', () => showScreen('reset'));
     }
 
+    // Reset form
     const resetForm = document.getElementById('resetForm');
     if (resetForm) {
         resetForm.addEventListener('submit', (e) => {
@@ -202,6 +235,7 @@ function bindEvents() {
         });
     }
 
+    // Reset back
     const resetBack = document.getElementById('resetBackBtn');
     if (resetBack) {
         resetBack.addEventListener('click', () => showScreen('login'));
@@ -244,7 +278,7 @@ function markLoginDotError() {
 }
 
 // =====================================================
-// HANDLE SETUP — 6 అంకెలు మాత్రమే
+// HANDLE SETUP
 // =====================================================
 async function handleSetup() {
     const district = document.getElementById('setupDistrict').value.trim();
@@ -261,7 +295,6 @@ async function handleSetup() {
     if (!district || !mandal || !village || !school || !hmName) {
         return showFormError(errorEl, 'అన్ని ఫీల్డ్స్ నింపండి.');
     }
-    // ✅ 6 అంకెలు మాత్రమే
     if (!/^\d{6}$/.test(pin)) {
         return showFormError(errorEl, 'PIN 6 అంకెలు ఉండాలి.');
     }
@@ -305,7 +338,6 @@ async function handleLogin() {
     const lockMsg = document.getElementById('loginLockMsg');
     const btn = document.getElementById('loginSubmitBtn');
 
-    // ✅ 6 అంకెలు మాత్రమే
     if (!/^\d{6}$/.test(pin)) {
         if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
             UI.toast('PIN 6 అంకెలు ఉండాలి.', 'warning');
@@ -380,7 +412,7 @@ function startLockoutTimer(seconds) {
 }
 
 // =====================================================
-// HANDLE RESET — 6 అంకెలు మాత్రమే
+// HANDLE RESET
 // =====================================================
 async function handleReset() {
     const resetCode = document.getElementById('resetCode').value.trim();
@@ -390,7 +422,6 @@ async function handleReset() {
     const btn = document.getElementById('resetSubmitBtn');
 
     if (!resetCode) return showFormError(errorEl, 'Reset Code నింపండి.');
-    // ✅ 6 అంకెలు మాత్రమే
     if (!/^\d{6}$/.test(newPin)) return showFormError(errorEl, 'కొత్త PIN 6 అంకెలు ఉండాలి.');
     if (newPin !== newPinConfirm) return showFormError(errorEl, 'PIN మరియు నిర్ధారణ PIN మ్యాచ్ అవ్వలేదు.');
 
@@ -418,25 +449,5 @@ async function handleReset() {
 }
 
 // =====================================================
-// FORM ERROR HELPERS — డూప్లికేట్ తీసేయబడింది
-// =====================================================
-function showFormError(el, message) {
-    if (el) {
-        el.textContent = message;
-        el.classList.remove('hidden');
-        // Inline error కనిపిస్తుంది కాబట్టి toast అవసరం లేదు
-    } else {
-        // el లేకపోతే మాత్రమే toast
-        if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
-            UI.toast(message, 'error');
-        } else {
-            alert(message);
-        }
-    }
-}
-
-function hideFormError(el) {
-    if (!el) return;
-    el.textContent = '';
-    el.classList.add('hidden');
-}
+// FORM ERROR HELPERS
+// =
