@@ -138,9 +138,9 @@ function bindEvents() {
     const loginPin = document.getElementById('loginPin');
     if (loginPin) {
         loginPin.addEventListener('input', () => {
-            loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 4);
+            loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 6);
             if (loginPin.value.length === 6) {
-                setTimeout(() => handleLogin(), 150);
+                setTimeout(() => handleLogin(), 300);
             }
         });
     }
