@@ -1,4 +1,5 @@
 // js/config.js
+
 const firebaseConfig = {
   apiKey: "AIzaSyBUI0QbBUmiwZxkGgEFHTisK9ZCFmxN3Ok",
   authDomain: "mpmpsdagguluru.firebaseapp.com",
@@ -9,6 +10,7 @@ const firebaseConfig = {
   measurementId: "G-4PM6CS40SZ"
 };
 
+// Firebase Initialize (duplicate prevent)
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -16,9 +18,18 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// 👇 ఇది తప్పనిసరిగా ఉండాలి (Anonymous Login)
-auth.signInAnonymously().then(() => {
-    console.log("Firebase Auth: Anonymous login successful!");
-}).catch((error) => {
-    console.error("Firebase Auth Error:", error);
-});
+// =====================================================
+// Anonymous Auth Promise
+// Firestore rules లో request.auth != null ఉంటే,
+// డేటా రాసే ముందు auth పూర్తి కావాలి.
+// వాడే చోట: await authReady;
+// =====================================================
+const authReady = auth.signInAnonymously()
+    .then(() => {
+        console.log("✅ Firebase Auth: Anonymous login successful!");
+        return true;
+    })
+    .catch((error) => {
+        console.error("❌ Firebase Auth Error:", error);
+        return false;
+    });
