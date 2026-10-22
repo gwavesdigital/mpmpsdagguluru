@@ -12,8 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
+    <!-- Toggle Switch CSS (In-built) -->
     <style>
-        /* Toggle Switch CSS */
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
@@ -26,7 +26,7 @@
 </head>
 <body>
 
-    <!-- App Container: డిఫాల్ట్ గా కనిపించేలా (display: block) -->
+    <!-- App Container: ఇక్కడ display: none తీసేశాను, కాబట్టి డైరెక్ట్ గా కనిపిస్తుంది -->
     <div class="app-container" id="app-container">
         <header id="app-header" class="app-header"></header>
 
@@ -159,17 +159,19 @@
     <script src="js/ui.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // 1. Auth Check (చాలా సులభంగా మార్చాం)
+        // 1. Auth Check (Safe Check)
         const sessionStr = localStorage.getItem('dm_session');
         if (!sessionStr) { 
-            window.location.href = 'index.html'; // సెషన్ లేకపోతే హోమ్ కి పంపు
+            // సెషన్ లేకపోతే వెంటనే హోమ్ పేజీకి పంపించు
+            window.location.href = 'index.html'; 
         } else {
+            // సెషన్ ఉంటే పేరు చూపించు, UI లోడ్ చెయ్
             const session = JSON.parse(sessionStr);
             document.getElementById('hm-name-display').innerText = session.name || 'Headmaster';
             UI.initLayout();
         }
 
-        // 2. Load Section Toggles
+        // 2. Load Section Toggles from Database
         async function loadToggles() {
             try {
                 const doc = await db.collection('schoolInfo').doc('main').get();
@@ -183,7 +185,7 @@
         }
         loadToggles();
 
-        // 3. Update Toggles
+        // 3. Update Toggles in Database
         async function updateToggle(section, isChecked) {
             try {
                 await db.collection('schoolInfo').doc('main').update({
@@ -191,7 +193,8 @@
                 });
             } catch(error) {
                 alert("Failed to update status. Check internet.");
-                document.getElementById(`toggle-${section}`).checked = !isChecked;
+                // ఎర్రర్ వస్తే టోగుల్ ని పాత స్థితికి మార్చు
+                document.getElementById(`toggle-${section}`).checked = !isChecked; 
             }
         }
 
