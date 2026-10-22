@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1B5E20" />
+  <title>Headmaster — Digital Manabadi</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-hm">
+
+  <!-- ===== SPLASH SCREEN ===== -->
+  <div id="splash" class="splash-screen">
+    <div class="splash-logo" style="font-size:4rem;">🏫</div>
+    <h1 class="splash-title">Digital Manabadi</h1>
+    <p class="splash-sub">MP MPS Dagguluru</p>
+    <div class="splash-loader"></div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <main id="hmApp" class="hm-app hidden">
+
+    <!-- Header -->
+    <header class="app-header">
+      <!-- ✅ Beautiful Back Arrow (with circle background) -->
+      <button id="backBtn" class="icon-btn back-btn hidden" aria-label="Back" title="వెనక్కి">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      
+      <h1 id="pageTitle" class="app-title">Headmaster</h1>
+      
+      <!-- ✅ Beautiful Logout Icon (hidden until login) -->
+      <button id="logoutBtn" class="icon-btn logout-btn hidden" aria-label="Logout" title="లాగౌట్">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+      
+      <!-- Theme Toggle (setup/login సమయంలో) -->
+      <button id="themeBtn" class="icon-btn theme-btn" aria-label="Theme" title="థీమ్">🌙</button>
+    </header>
+
+    <!-- ========== SCREEN 1: SETUP ========== -->
+    <section id="screenSetup" class="screen hidden">
+      <div class="card">
+        <h2 class="card-title">🏫 పాఠశాల సెటప్</h2>
+        <p class="card-desc">మొదటిసారి మాత్రమే. అన్ని వివరాలు ఖచ్చితంగా నింపండి.</p>
+
+        <form id="setupForm" class="form" novalidate>
+          <div class="field">
+            <label for="setupDistrict">జిల్లా</label>
+            <input type="text" id="setupDistrict" required autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="setupMandal">మండలం</label>
+            <input type="text" id="setupMandal" required autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="setupVillage">గ్రామం</label>
+            <input type="text" id="setupVillage" required autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="setupSchool">పాఠశాల పేరు</label>
+            <input type="text" id="setupSchool" required autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="setupHmName">హెడ్‌మాస్టర్ పేరు</label>
+            <input type="text" id="setupHmName" required autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="setupValiassCode">Valiass Setup Code</label>
+            <input type="password" id="setupValiassCode" required autocomplete="off" inputmode="text" placeholder="5 ఫీల్డ్స్ చివరి అక్షరం + @533340" />
+            <small class="field-hint">5 ఫీల్డ్స్ చివరి అక్షరం + @533340</small>
+          </div>
+
+          <div class="field">
+            <label for="setupHmPin">HM PIN (6 అంకెలు)</label>
+            <div class="pin-wrap">
+              <input type="password" id="setupHmPin" maxlength="6" inputmode="numeric" placeholder="6 అంకెల PIN నమోదు చేయండి" required autocomplete="new-password" />
+              <button type="button" class="pin-toggle" data-target="setupHmPin" aria-label="Show PIN">👁</button>
+            </div>
+            <div id="setupPinDots" class="pin-dots" aria-hidden="true"></div>
+          </div>
+
+          <div class="field">
+            <label for="setupHmPinConfirm">HM PIN నిర్ధారించండి</label>
+            <div class="pin-wrap">
+              <input type="password" id="setupHmPinConfirm" maxlength="6" inputmode="numeric" placeholder="మళ్లీ 6 అంకెల PIN నమోదు చేయండి" required autocomplete="new-password" />
+              <button type="button" class="pin-toggle" data-target="setupHmPinConfirm" aria-label="Show PIN">👁</button>
+            </div>
+          </div>
+
+          <p id="setupError" class="form-error hidden" role="alert"></p>
+
+          <button type="submit" id="setupSubmitBtn" class="btn btn-primary btn-block">
+            సెటప్ పూర్తి చేయండి
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== SCREEN 2: LOGIN ========== -->
+    <section id="screenLogin" class="screen hidden">
+      <div class="card card-center">
+        <div class="login-icon">🔐</div>
+        <h2 class="card-title">హెడ్‌మాస్టర్ లాగిన్</h2>
+        <p id="loginSchoolName" class="card-desc"></p>
+
+        <form id="loginForm" class="form" novalidate>
+          <div class="field">
+            <label for="loginPin">HM PIN</label>
+            <div class="pin-wrap">
+              <input type="password" id="loginPin" maxlength="6" inputmode="numeric" placeholder="6 అంకెల PIN నమోదు చేయండి" required autocomplete="current-password" />
+              <button type="button" class="pin-toggle" data-target="loginPin" aria-label="Show PIN">👁</button>
+            </div>
+          </div>
+
+          <!-- 5-Dot Security Indicator -->
+          <div id="loginDots" class="pin-dots pin-dots-lg" aria-label="PIN attempts">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <p id="loginLockMsg" class="form-error hidden" role="alert"></p>
+
+          <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block">
+            లాగిన్
+          </button>
+        </form>
+
+        <button type="button" id="forgotPinBtn" class="link-btn">
+          PIN మర్చిపోయారా?
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== SCREEN 3: RESET PIN ========== -->
+    <section id="screenReset" class="screen hidden">
+      <div class="card">
+        <h2 class="card-title">🔑 PIN రీసెట్</h2>
+        <p class="card-desc">
+          రీసెట్ కోడ్ కోసం Valiass టీమ్‌ను సంప్రదించండి.
+        </p>
+
+        <form id="resetForm" class="form" novalidate>
+          <div class="field">
+            <label for="resetCode">HM Reset Code</label>
+            <input type="password" id="resetCode" required autocomplete="off" placeholder="రీసెట్ కోడ్ నమోదు చేయండి" />
+          </div>
+          <div class="field">
+            <label for="resetNewPin">కొత్త PIN (6 అంకెలు)</label>
+            <div class="pin-wrap">
+              <input type="password" id="resetNewPin" maxlength="6" inputmode="numeric" placeholder="కొత్త 6 అంకెల PIN నమోదు చేయండి" required autocomplete="new-password" />
+              <button type="button" class="pin-toggle" data-target="resetNewPin" aria-label="Show PIN">👁</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="resetNewPinConfirm">కొత్త PIN నిర్ధారించండి</label>
+            <div class="pin-wrap">
+              <input type="password" id="resetNewPinConfirm" maxlength="6" inputmode="numeric" placeholder="మళ్లీ కొత్త 6 అంకెల PIN నమోదు చేయండి" required autocomplete="new-password" />
+              <button type="button" class="pin-toggle" data-target="resetNewPinConfirm" aria-label="Show PIN">👁</button>
+            </div>
+          </div>
+
+          <p id="resetError" class="form-error hidden" role="alert"></p>
+
+          <button type="submit" id="resetSubmitBtn" class="btn btn-primary btn-block">
+            PIN రీసెట్ చేయండి
+          </button>
+        </form>
+
+        <button type="button" id="resetBackBtn" class="link-btn">
+          <i class="fas fa-arrow-left"></i> లాగిన్‌కి తిరిగి
+        </button>
+      </div>
+    </section>
+
+    <!-- ✅ FOOTER — Home page తో సమానంగా -->
+    <footer class="app-footer">
+      An initiative of <span class="valiass-link" onclick="UI.showContact()">@valiass</span> team
+    </footer>
+
+  </main>
+
+  <!-- ===== TOAST CONTAINER ===== -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- ===== FIREBASE SDK ===== -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <!-- ===== MODULAR JS ===== -->
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/headmaster.js"></script>
+</body>
+</html>
