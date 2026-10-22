@@ -302,4 +302,96 @@ async function handleLogin() {
             if (loginFailCount >= 5) {
                 if (lockMsg) {
                     lockMsg.textContent = '60 సెకన్ల పాటు లాక్ అయ్యింది.';
-                   
+                    lockMsg.classList.remove('hidden');
+                }
+                startLockoutTimer(60);
+            } else {
+                if (typeof UI !== 'undefined') UI.toast('❌ ' + result.message, 'error');
+            }
+            btn.disabled = false;
+            btn.textContent = 'లాగిన్';
+        }
+    } catch (err) {
+        console.error(err);
+        if (typeof UI !== 'undefined') UI.toast('నెట్‌వర్క్ లోపం.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'లాగిన్';
+    }
+}
+
+function startLockoutTimer(seconds) {
+    const btn = document.getElementById('loginSubmitBtn');
+    const lockMsg = document.getElementById('loginLockMsg');
+    let remaining = seconds;
+    if (btn) btn.disabled = true;
+
+    const interval = setInterval(() => {
+        remaining--;
+        if (lockMsg) lockMsg.textContent = `${remaining} సెకన్ల తర్వాత ప్రయత్నించండి.`;
+        if (remaining <= 0) {
+            clearInterval(interval);
+            if (lockMsg) lockMsg.classList.add('hidden');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'లాగిన్';
+            }
+            resetLoginDots();
+        }
+    }, 1000);
+}
+
+// =====================================================
+// HANDLE RESET
+// =====================================================
+async function handleReset() {
+    const resetCode = document.getElementById('resetCode').value.trim();
+    const newPin = document.getElementById('resetNewPin').value;
+    const newPinConfirm = document.getElementById('resetNewPinConfirm').value;
+    const errorEl = document.getElementById('resetError');
+    const btn = document.getElementById('resetSubmitBtn');
+
+    if (!resetCode) return showFormError(errorEl, 'Reset Code నింపండి.');
+    if (!/^\d{4}$/.test(newPin)) return showFormError(errorEl, 'కొత్త PIN 4 అంకెలు ఉండాలి.');
+    if (newPin !== newPinConfirm) return showFormError(errorEl, 'PIN మరియు నిర్ధారణ PIN మ్యాచ్ అవ్వలేదు.');
+
+    btn.disabled = true;
+    btn.textContent = 'రీసెట్ అవుతోంది...';
+    hideFormError(errorEl);
+
+    try {
+        const result = await Auth.resetHMPin(resetCode, newPin);
+        if (result.success) {
+            if (typeof UI !== 'undefined') UI.toast('✅ ' + result.message, 'success');
+            setTimeout(() => showScreen('login'), 800);
+        } else {
+            showFormError(errorEl, result.message);
+        }
+    } catch (err) {
+        console.error(err);
+        showFormError(errorEl, 'రీసెట్ విఫలమైంది.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'PIN రీసెట్ చేయండి';
+    }
+}
+
+// =====================================================
+// FORM ERROR HELPERS
+// =====================================================
+function showFormError(el, message) {
+    if (el) {
+        el.textContent = message;
+        el.classList.remove('hidden');
+    }
+    if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
+        UI.toast(message, 'error');
+    } else {
+        alert(message);
+    }
+}
+
+function hideFormError(el) {
+    if (!el) return;
+    el.textContent = '';
+    el.classList.add('hidden');
+}
