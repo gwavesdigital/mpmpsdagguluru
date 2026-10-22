@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--base-font-size', savedSize + 'px');
     }
 
-    // 4. Init UI Components (Header, Footer, PWA)
+    // 4. Init UI Components
     if (typeof UI !== 'undefined') {
         UI.initLayout();
         UI.initPWA();
@@ -33,65 +33,70 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 5. Access Control Logic (కార్డ్స్ పైన క్లిక్ చేసినప్పుడు)
+// 5. Access Control Logic
 // ==========================================
 async function checkAccess(role) {
+    // HM కి ఎప్పుడూ వెళ్లు — డేటాబేస్ చెక్ అవసరం లేదు
+    if (role === 'headmaster') {
+        window.location.href = 'headmaster.html';
+        return;
+    }
+
+    // మిగతా roles కి ముందు డేటా చెక్
+    let data = null;
+
     try {
-        // ✅ Auth పూర్తి అయ్యే వరకు వేచి ఉండు
+        // Auth పూర్తి అయ్యే వరకు వేచి ఉండు (కానీ fail అయినా కొనసాగు)
         if (typeof authReady !== 'undefined') {
-            await authReady;
+            await Promise.race([
+                authReady,
+                new Promise(resolve => setTimeout(resolve, 3000)) // 3s timeout
+            ]);
         }
 
-        // డేటాబేస్ నుంచి స్కూల్ సమాచారం తీసుకోవడం
+        // Firestore నుంచి డేటా తీసుకో
         const schoolDoc = await db.collection('schoolInfo').doc('main').get();
-        const data = schoolDoc.exists ? schoolDoc.data() : null;
-
-        // =====================================================
-        // 1. హెడ్‌మాస్టర్ (HM) — ఎప్పుడూ headmaster.html కి పంపాలి
-        //    (ఆ పేజీ లోపల సెటప్/లాగిన్ ఏది చూపాలో నిర్ణయిస్తుంది)
-        // =====================================================
-        if (role === 'headmaster') {
-            window.location.href = 'headmaster.html';
-            return;
-        }
-
-        // =====================================================
-        // 2. మిగతా సెక్షన్స్ (Teacher, Cook, Parent)
-        //    ముందు స్కూల్ సెటప్ పూర్తి అయిందా చెక్ చేయాలి
-        // =====================================================
-        if (!data || !data.isSetupComplete) {
-            showAccessError(
-                '⚠️ స్కూల్ సెటప్ పూర్తి కాలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.'
-            );
-            return;
-        }
-
-        // =====================================================
-        // 3. సెక్షన్ ఎనేబుల్ చేశారా అని చెక్ చేయడం
-        // =====================================================
-        const sections = data.sections || {};
-        
-        if (sections[role] === true) {
-            // సెక్షన్ ఆన్ ఉంటే ఆ పేజీకి పంపడం
-            window.location.href = role + '.html';
-        } else {
-            showAccessError(
-                `⚠️ ${getRoleLabel(role)} సెక్షన్ ఇంకా ఎనేబుల్ చేయలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.`
-            );
-        }
+        data = schoolDoc.exists ? schoolDoc.data() : null;
 
     } catch (error) {
-        console.error("Access Check Error:", error);
-        showAccessError('❌ నెట్‌వర్క్ లోపం. మళ్లీ ప్రయత్నించండి.');
+        console.error("Firestore Error:", error);
+        // Firestore ఎర్రర్ (permission/network) → స్పష్టమైన మెసేజ్
+        showAccessError(
+            '⚠️ డేటాబేస్ కనెక్షన్ లోపం.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.\nలేదా ఇంటర్నెట్ కనెక్షన్ చెక్ చేయండి.'
+        );
+        return;
+    }
+
+    // =====================================================
+    // డేటా లేదు → సెటప్ పూర్తి కాలేదు
+    // =====================================================
+    if (!data || !data.isSetupComplete) {
+        showAccessError(
+            '⚠️ పాఠశాల సెటప్ ఇంకా పూర్తి కాలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.'
+        );
+        return;
+    }
+
+    // =====================================================
+    // సెక్షన్ ఎనేబుల్ చేశారా?
+    // =====================================================
+    const sections = data.sections || {};
+    
+    if (sections[role] === true) {
+        window.location.href = role + '.html';
+    } else {
+        showAccessError(
+            `⚠️ ${getRoleLabel(role)} సెక్షన్ ఇంకా ఎనేబుల్ చేయలేదు.\nదయచేసి హెడ్‌మాస్టర్‌ని సంప్రదించండి.`
+        );
     }
 }
 
 // ==========================================
-// Helper: Error Message (Toast లేకుంటే alert)
+// Helper: Error Message
 // ==========================================
 function showAccessError(message) {
     if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
-        UI.toast(message, 'error', 4000);
+        UI.toast(message, 'warning', 5000);
     } else {
         alert(message);
     }
