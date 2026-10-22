@@ -14,7 +14,7 @@
 </head>
 <body class="page-hm">
 
-  <!-- ===== SPLASH SCREEN (class="splash-screen" — CSS match) ===== -->
+  <!-- ===== SPLASH SCREEN ===== -->
   <div id="splash" class="splash-screen">
     <div class="splash-logo" style="font-size:4rem;">🏫</div>
     <h1 class="splash-title">Digital Manabadi</h1>
@@ -68,10 +68,11 @@
             <small class="field-hint">5 ఫీల్డ్స్ చివరి అక్షరం + @533340</small>
           </div>
 
+          <!-- ✅ SETUP PIN — maxlength 6 -->
           <div class="field">
-            <label for="setupHmPin">HM PIN (4 అంకెలు)</label>
+            <label for="setupHmPin">HM PIN (4-6 అంకెలు)</label>
             <div class="pin-wrap">
-              <input type="password" id="setupHmPin" maxlength="6" inputmode="numeric" pattern="[0-9]{4}" required autocomplete="new-password" />
+              <input type="password" id="setupHmPin" maxlength="6" inputmode="numeric" pattern="[0-9]{4,6}" required autocomplete="new-password" />
               <button type="button" class="pin-toggle" data-target="setupHmPin" aria-label="Show PIN">👁</button>
             </div>
             <div id="setupPinDots" class="pin-dots" aria-hidden="true"></div>
@@ -80,7 +81,7 @@
           <div class="field">
             <label for="setupHmPinConfirm">HM PIN నిర్ధారించండి</label>
             <div class="pin-wrap">
-              <input type="password" id="setupHmPinConfirm" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" required autocomplete="new-password" />
+              <input type="password" id="setupHmPinConfirm" maxlength="6" inputmode="numeric" pattern="[0-9]{4,6}" required autocomplete="new-password" />
               <button type="button" class="pin-toggle" data-target="setupHmPinConfirm" aria-label="Show PIN">👁</button>
             </div>
           </div>
@@ -103,9 +104,10 @@
 
         <form id="loginForm" class="form" novalidate>
           <div class="field">
-            <label for="loginPin">HM PIN</label>
+            <label for="loginPin">HM PIN (4-6 అంకెలు)</label>
             <div class="pin-wrap">
-              <input type="password" id="loginPin" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" required autocomplete="current-password" />
+              <!-- ✅ LOGIN PIN — maxlength 6 -->
+              <input type="password" id="loginPin" maxlength="6" inputmode="numeric" pattern="[0-9]{4,6}" required autocomplete="current-password" />
               <button type="button" class="pin-toggle" data-target="loginPin" aria-label="Show PIN">👁</button>
             </div>
           </div>
@@ -145,16 +147,16 @@
             <input type="password" id="resetCode" required autocomplete="off" />
           </div>
           <div class="field">
-            <label for="resetNewPin">కొత్త PIN</label>
+            <label for="resetNewPin">కొత్త PIN (4-6 అంకెలు)</label>
             <div class="pin-wrap">
-              <input type="password" id="resetNewPin" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" required autocomplete="new-password" />
+              <input type="password" id="resetNewPin" maxlength="6" inputmode="numeric" pattern="[0-9]{4,6}" required autocomplete="new-password" />
               <button type="button" class="pin-toggle" data-target="resetNewPin" aria-label="Show PIN">👁</button>
             </div>
           </div>
           <div class="field">
             <label for="resetNewPinConfirm">కొత్త PIN నిర్ధారించండి</label>
             <div class="pin-wrap">
-              <input type="password" id="resetNewPinConfirm" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" required autocomplete="new-password" />
+              <input type="password" id="resetNewPinConfirm" maxlength="6" inputmode="numeric" pattern="[0-9]{4,6}" required autocomplete="new-password" />
               <button type="button" class="pin-toggle" data-target="resetNewPinConfirm" aria-label="Show PIN">👁</button>
             </div>
           </div>
