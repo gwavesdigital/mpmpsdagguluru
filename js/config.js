@@ -1,13 +1,13 @@
 // js/config.js
 
+// ⚠️ కొత్త ప్రాజెక్ట్ mpmpsdagguluru-2026 విలువలు
 const firebaseConfig = {
-  apiKey: "AIzaSyBUI0QbBUmiwZxkGgEFHTisK9ZCFmxN3Ok",
-  authDomain: "mpmpsdagguluru.firebaseapp.com",
-  projectId: "mpmpsdagguluru",
-  storageBucket: "mpmpsdagguluru.firebasestorage.app",
-  messagingSenderId: "442302836489",
-  appId: "1:442302836489:web:90e30c176c302c723fadd8",
-  measurementId: "G-4PM6CS40SZ"
+  apiKey: "AIzaSyDkmfsfUuP_5NWfqsn_FHhDVhLPVvSivY8",
+  authDomain: "mpmpsdagguluru-2026.firebaseapp.com",
+  projectId: "mpmpsdagguluru-2026",
+  storageBucket: "mpmpsdagguluru-2026.firebasestorage.app",
+  messagingSenderId: "347951688448",
+  appId: "1:347951688448:web:6f45e622dff615806ea1e5"
 };
 
 // Firebase Initialize (duplicate prevent)
