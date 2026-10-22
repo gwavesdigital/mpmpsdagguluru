@@ -62,7 +62,7 @@
    2. RESET & BASE STYLES
    ========================================= */
 * {
-  box-sizing: border-box; /* 👈 ఇది చాలా ముఖ్యం: బాక్సులు కట్ అవ్వకుండా ఆపుతుంది */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
@@ -292,7 +292,7 @@ body.not-logged-in .bottom-nav {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   width: 100%;
-  max-width: 380px; /* మొబైల్ స్క్రీన్ కి తగ్గట్టు */
+  max-width: 380px;
   margin: 0 auto;
   position: relative;
   box-sizing: border-box;
@@ -359,18 +359,16 @@ body.not-logged-in .bottom-nav {
   font-family: inherit;
 }
 
-/* వాల్యూ కోడ్ ఇన్‌పుట్ కి ఎడమ వైపు ప్యాడింగ్ */
 .input-group .form-control {
   padding-left: 45px; 
 }
 
-/* పిన్ ఇన్‌పుట్ ప్రత్యేక డిజైన్ */
 .pin-input {
   text-align: center !important;
   font-size: 1.5rem !important;
   letter-spacing: 8px !important;
   font-weight: 700 !important;
-  padding: 10px 45px 10px 45px !important; /* రెండు వైపులా ఐకాన్స్ కి చోటు */
+  padding: 10px 45px 10px 45px !important;
 }
 
 .toggle-pin-btn {
@@ -476,18 +474,15 @@ select.form-control {
     position: sticky;
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
-   }
+}
+
 /* =========================================
    11. PREMIUM EXTRA TOUCHES (Animations & Glows)
    ========================================= */
-
-/* 1. Soft Background Glow for Login/Setup Pages */
 body.not-logged-in {
   background: radial-gradient(circle at 50% 0%, rgba(76, 175, 80, 0.15) 0%, var(--bg-color) 60%) !important;
 }
 
-/* 2. Input Focus Magic */
-/* పిన్ బాక్స్ లో టైప్ చేయడానికి క్లిక్ చేసినప్పుడు లాక్ ఐకాన్ గ్రీన్ కలర్ లోకి మారుతుంది */
 .input-group:focus-within .input-icon {
   color: var(--primary);
   transform: scale(1.1);
@@ -499,7 +494,6 @@ body.not-logged-in {
   box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
 }
 
-/* 3. Premium Button Shine Effect */
 .btn-glow {
   position: relative;
   overflow: hidden;
@@ -521,7 +515,6 @@ body.not-logged-in {
   left: 120%;
 }
 
-/* 4. Better Splash Screen Animation */
 .splash-logo {
   animation: zoomInBounce 1.5s ease-out forwards !important;
 }
@@ -532,7 +525,6 @@ body.not-logged-in {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* 5. Card Hover Effects for Dashboard */
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -542,7 +534,6 @@ body.not-logged-in {
   transform: translateY(-2px);
 }
 
-/* 6. Modern PIN Input Dots (బాక్సులు ఇంకా అందంగా) */
 .pin-input {
   background: #ffffff !important;
   border: 2px solid #E2E8F0 !important;
@@ -550,4 +541,82 @@ body.not-logged-in {
 [data-theme="dark"] .pin-input {
   background: #0F172A !important;
   border-color: #334155 !important;
+}
+
+/* =========================================
+   12. PREMIUM TOGGLE SWITCH (కొత్తగా యాడ్ చేసినది)
+   ========================================= */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: var(--primary);
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--primary);
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* =========================================
+   13. PIN DOTS SECURITY UI (కొత్తగా యాడ్ చేసినది)
+   ========================================= */
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+.pin-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  transition: background-color 0.3s;
+}
+.pin-dot.error {
+  background-color: var(--danger);
+}
+.attempt-text {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--danger);
+  font-weight: 600;
+  height: 20px;
 }
