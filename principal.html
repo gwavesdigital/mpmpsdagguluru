@@ -50,6 +50,7 @@
                     </div>
                     <div class="form-group"><input type="text" id="mandal" class="form-control" placeholder="Mandal (మండలం)" required></div>
                     <div class="form-group"><input type="text" id="village" class="form-control" placeholder="Village (గ్రామం)" required></div>
+                    <!-- Updated to Headmaster Name -->
                     <div class="form-group"><input type="text" id="hmName" class="form-control" placeholder="Headmaster Name (HM పేరు)" required></div>
                     
                     <div class="form-group">
@@ -74,36 +75,50 @@
                 <div class="premium-card-icon"><i class="fas fa-user-shield"></i></div>
                 <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Welcome Back</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">Headmaster Login</p>
+                    <!-- Updated to Headmaster -->
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Headmaster Login (హెచ్‌ఎం లాగిన్)</p>
                 </div>
                 <form id="hm-login-form">
                     <div class="form-group">
                         <div class="input-group">
                             <i class="fas fa-lock input-icon"></i>
                             <input type="password" id="hm-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
-                        </div>
-                        <!-- Forgot PIN Link -->
-                        <div style="text-align: right; margin-top: 8px;">
-                            <a href="#" onclick="showResetView()" style="color: var(--primary); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Forgot PIN?</a>
+                            <button type="button" class="toggle-pin-btn" onclick="togglePinVisibility('hm-pin', 'pin-eye-icon')">
+                                <i class="fas fa-eye" id="pin-eye-icon"></i>
+                            </button>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-glow" id="login-btn" style="margin-top: 10px;">Login</button>
+                    
+                    <!-- Forgot PIN Option -->
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="#" onclick="showResetView()" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none; font-weight: 600;">
+                            Forgot PIN? (పిన్ మర్చిపోయారా?)
+                        </a>
+                    </div>
                 </form>
             </div>
 
-            <!-- View 3: Reset PIN Form (New) -->
+            <!-- View 3: Reset PIN Form -->
             <div id="view-reset" class="premium-card" style="display: none;">
                 <div class="premium-card-icon" style="background: linear-gradient(135deg, #D32F2F, #B71C1C);"><i class="fas fa-unlock-alt"></i></div>
                 <div style="text-align: center; margin-bottom: var(--space-lg); margin-top: 10px;">
                     <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-main);">Reset PIN</h2>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">వాల్యూ టీమ్ ఇచ్చిన కోడ్ ని ఎంటర్ చేయండి</p>
                 </div>
+                
+                <!-- Secret Hint Removed. Only Contact Info -->
+                <div style="background: rgba(211, 47, 47, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(211, 47, 47, 0.2);">
+                    <p style="font-size: 0.85rem; color: var(--danger); text-align: center; margin: 0; line-height: 1.4;">
+                        <b>సూచన:</b> మీ పిన్ మర్చిపోయినట్లయితే, దయచేసి <b>వాల్యూ టీమ్ (Valiass Team)</b> ని సంప్రదించి రీసెట్ కోడ్ పొందండి. ఆ కోడ్ ని ఇక్కడ ఎంటర్ చేసి కొత్త పిన్ సెట్ చేసుకోండి.
+                    </p>
+                </div>
+
                 <form id="reset-form">
                     <div class="form-group">
                         <label class="form-label">Valiass Reset Code</label>
                         <div class="input-group">
                             <i class="fas fa-shield-alt input-icon"></i>
-                            <input type="text" id="reset-code" class="form-control" placeholder="919120 - ddmmyy" required>
+                            <input type="text" id="reset-code" class="form-control" placeholder="వాల్యూ టీమ్ ఇచ్చిన రహస్య కోడ్" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -111,6 +126,9 @@
                         <div class="input-group">
                             <i class="fas fa-key input-icon"></i>
                             <input type="password" id="reset-new-pin" class="form-control pin-input" maxlength="6" inputmode="numeric" pattern="\d*" placeholder="••••••" required>
+                            <button type="button" class="toggle-pin-btn" onclick="togglePinVisibility('reset-new-pin', 'reset-pin-eye-icon')">
+                                <i class="fas fa-eye" id="reset-pin-eye-icon"></i>
+                            </button>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-glow" id="reset-btn" style="margin-top: 10px;">Reset PIN</button>
@@ -135,6 +153,18 @@
         const viewSetup = document.getElementById('view-setup');
         const viewLogin = document.getElementById('view-login');
         const viewReset = document.getElementById('view-reset');
+
+        function togglePinVisibility(inputId, iconId) {
+            const pinInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pinInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
 
         function showResetView() { viewLogin.style.display = 'none'; viewReset.style.display = 'block'; }
         function showLoginView() { viewReset.style.display = 'none'; viewLogin.style.display = 'block'; }
@@ -197,25 +227,25 @@
             else { alert("❌ " + result.message); btn.innerHTML = 'Login'; btn.disabled = false; }
         });
 
-        // Reset PIN Form (Valiass Code Logic)
+        // Reset PIN Form (Secret Logic Calculation)
         document.getElementById('reset-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('reset-btn');
             const resetCode = document.getElementById('reset-code').value.trim();
             const newPin = document.getElementById('reset-new-pin').value.trim();
 
-            // ఈరోజు తేదీని ddmmyy ఫార్మాట్ లోకి మార్చడం
+            // ఈరోజు తేదీని ddmmyy ఫార్మాట్ లోకి మార్చడం (ఇది స్క్రీన్ పైన కనిపించదు)
             const today = new Date();
             const dd = String(today.getDate()).padStart(2, '0');
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const yy = String(today.getFullYear()).slice(-2);
             const ddmmyy = parseInt(dd + mm + yy);
             
-            // వాల్యూ రీసెట్ కోడ్ ఫార్ములా: 919120 - ddmmyy
-            const expectedCode = String(919120 - ddmmyy);
+            // వాల్యూ రీసెట్ కోడ్ ఫార్ములా: 919720 - ddmmyy
+            const expectedCode = String(919720 - ddmmyy);
 
             if (resetCode !== expectedCode) {
-                alert(`❌ తప్పు రీసెట్ కోడ్!\n(సరైన కోడ్ ఈరోజు తేదీ ప్రకారం ఉండాలి. వాల్యూ టీమ్ ని సంప్రదించండి.)`);
+                alert(`❌ తప్పు రీసెట్ కోడ్!\nదయచేసి వాల్యూ టీమ్ ఇచ్చిన కోడ్ సరిగ్గా ఉందో లేదో చెక్ చేయండి.`);
                 return;
             }
 
