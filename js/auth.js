@@ -2,7 +2,7 @@
 const Auth = {
 
     // =====================================================
-    // HM LOGIN — 4 నుండి 6 అంకెల PIN సపోర్ట్
+    // HM LOGIN — 6 అంకెల PIN సపోర్ట్
     // =====================================================
     loginHM: async function(enteredPin) {
         try {
@@ -13,10 +13,9 @@ const Auth = {
                 return { success: false, message: `లాక్ అయ్యింది. ${remaining} సెకన్ల తర్వాత ప్రయత్నించండి.` };
             }
 
-            // 2. PIN ఫార్మాట్ చెక్ (4-6 అంకెలు)
-            const pinStr = String(enteredPin || '').trim();
-            if (!/^\d{4,6}$/.test(pinStr)) {
-                return { success: false, message: "PIN 4 నుండి 6 అంకెలు ఉండాలి." };
+            // ✅ కొత్త
+            if (!/^\d{6}$/.test(pinStr)) {
+            return { success: false, message: "PIN 6 అంకెలు ఉండాలి." };
             }
 
             // 3. Firestore నుండి డేటా
