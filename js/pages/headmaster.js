@@ -129,7 +129,7 @@ function bindEvents() {
         });
     });
 
-    // ✅ Setup PIN — 4 నుండి 6 అంకెలు
+    // ✅ Setup PIN — 6 అంకెలు మాత్రమే
     const setupPin = document.getElementById('setupHmPin');
     if (setupPin) {
         setupPin.addEventListener('input', () => {
@@ -138,7 +138,7 @@ function bindEvents() {
         });
     }
 
-    // ✅ Setup PIN Confirm — 4 నుండి 6 అంకెలు
+    // ✅ Setup PIN Confirm — 6 అంకెలు మాత్రమే
     const setupPinConfirm = document.getElementById('setupHmPinConfirm');
     if (setupPinConfirm) {
         setupPinConfirm.addEventListener('input', () => {
@@ -146,19 +146,18 @@ function bindEvents() {
         });
     }
 
-    // ✅ LOGIN PIN — 6 అంకెలు మాత్రమే auto-submit (919720 కోసం)
+    // ✅ LOGIN PIN — 6 అంకెలు మాత్రమే auto-submit
     const loginPin = document.getElementById('loginPin');
     if (loginPin) {
         loginPin.addEventListener('input', () => {
             loginPin.value = loginPin.value.replace(/\D/g, '').slice(0, 6);
-            // 6 అంకెలు అయ్యాక మాత్రమే auto-submit
             if (loginPin.value.length === 6) {
                 setTimeout(() => handleLogin(), 300);
             }
         });
     }
 
-    // ✅ Reset New PIN — 4 నుండి 6 అంకెలు
+    // ✅ Reset New PIN — 6 అంకెలు మాత్రమే
     const resetNewPin = document.getElementById('resetNewPin');
     if (resetNewPin) {
         resetNewPin.addEventListener('input', () => {
@@ -166,7 +165,7 @@ function bindEvents() {
         });
     }
 
-    // ✅ Reset New PIN Confirm — 4 నుండి 6 అంకెలు
+    // ✅ Reset New PIN Confirm — 6 అంకెలు మాత్రమే
     const resetNewPinConfirm = document.getElementById('resetNewPinConfirm');
     if (resetNewPinConfirm) {
         resetNewPinConfirm.addEventListener('input', () => {
@@ -215,7 +214,6 @@ function bindEvents() {
 function updatePinDots(containerId, count) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    // Container ఖాళీగా ఉంటే 6 dots క్రియేట్ చేయి
     if (container.children.length === 0) {
         for (let i = 0; i < 6; i++) {
             const dot = document.createElement('span');
@@ -246,7 +244,7 @@ function markLoginDotError() {
 }
 
 // =====================================================
-// HANDLE SETUP
+// HANDLE SETUP — 6 అంకెలు మాత్రమే
 // =====================================================
 async function handleSetup() {
     const district = document.getElementById('setupDistrict').value.trim();
@@ -260,13 +258,12 @@ async function handleSetup() {
     const errorEl = document.getElementById('setupError');
     const btn = document.getElementById('setupSubmitBtn');
 
-    // Validation
     if (!district || !mandal || !village || !school || !hmName) {
         return showFormError(errorEl, 'అన్ని ఫీల్డ్స్ నింపండి.');
     }
-    // ✅ 4 నుండి 6 అంకెల PIN
-    if (!/^\d{4,6}$/.test(pin)) {
-        return showFormError(errorEl, 'PIN 4 నుండి 6 అంకెలు ఉండాలి.');
+    // ✅ 6 అంకెలు మాత్రమే
+    if (!/^\d{6}$/.test(pin)) {
+        return showFormError(errorEl, 'PIN 6 అంకెలు ఉండాలి.');
     }
     if (pin !== pinConfirm) {
         return showFormError(errorEl, 'PIN మరియు నిర్ధారణ PIN మ్యాచ్ అవ్వలేదు.');
@@ -300,7 +297,7 @@ async function handleSetup() {
 }
 
 // =====================================================
-// HANDLE LOGIN
+// HANDLE LOGIN — 6 అంకెలు మాత్రమే
 // =====================================================
 async function handleLogin() {
     const pinInput = document.getElementById('loginPin');
@@ -308,10 +305,10 @@ async function handleLogin() {
     const lockMsg = document.getElementById('loginLockMsg');
     const btn = document.getElementById('loginSubmitBtn');
 
-    // ✅ 4 నుండి 6 అంకెల PIN
-    if (!/^\d{4,6}$/.test(pin)) {
+    // ✅ 6 అంకెలు మాత్రమే
+    if (!/^\d{6}$/.test(pin)) {
         if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
-            UI.toast('PIN 4 నుండి 6 అంకెలు ఉండాలి.', 'warning');
+            UI.toast('PIN 6 అంకెలు ఉండాలి.', 'warning');
         }
         return;
     }
@@ -383,7 +380,7 @@ function startLockoutTimer(seconds) {
 }
 
 // =====================================================
-// HANDLE RESET
+// HANDLE RESET — 6 అంకెలు మాత్రమే
 // =====================================================
 async function handleReset() {
     const resetCode = document.getElementById('resetCode').value.trim();
@@ -393,8 +390,8 @@ async function handleReset() {
     const btn = document.getElementById('resetSubmitBtn');
 
     if (!resetCode) return showFormError(errorEl, 'Reset Code నింపండి.');
-    // ✅ 4 నుండి 6 అంకెల PIN
-    if (!/^\d{4,6}$/.test(newPin)) return showFormError(errorEl, 'కొత్త PIN 4 నుండి 6 అంకెలు ఉండాలి.');
+    // ✅ 6 అంకెలు మాత్రమే
+    if (!/^\d{6}$/.test(newPin)) return showFormError(errorEl, 'కొత్త PIN 6 అంకెలు ఉండాలి.');
     if (newPin !== newPinConfirm) return showFormError(errorEl, 'PIN మరియు నిర్ధారణ PIN మ్యాచ్ అవ్వలేదు.');
 
     btn.disabled = true;
@@ -421,17 +418,20 @@ async function handleReset() {
 }
 
 // =====================================================
-// FORM ERROR HELPERS
+// FORM ERROR HELPERS — డూప్లికేట్ తీసేయబడింది
 // =====================================================
 function showFormError(el, message) {
     if (el) {
         el.textContent = message;
         el.classList.remove('hidden');
-    }
-    if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
-        UI.toast(message, 'error');
+        // Inline error కనిపిస్తుంది కాబట్టి toast అవసరం లేదు
     } else {
-        alert(message);
+        // el లేకపోతే మాత్రమే toast
+        if (typeof UI !== 'undefined' && typeof UI.toast === 'function') {
+            UI.toast(message, 'error');
+        } else {
+            alert(message);
+        }
     }
 }
 
