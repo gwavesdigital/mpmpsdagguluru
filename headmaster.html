@@ -6,66 +6,45 @@
   <meta name="theme-color" content="#1B5E20" />
   <title>Headmaster — Digital Manabadi</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="assets/favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="page-hm">
 
-  <!-- ===== SPLASH SCREEN ===== -->
-  <div id="splash" class="splash">
+  <!-- ===== SPLASH (class changed to splash-screen for CSS match) ===== -->
+  <div id="splash" class="splash-screen">
     <div class="splash-logo">🏫</div>
     <h1 class="splash-title">Digital Manabadi</h1>
     <p class="splash-sub">MP MPS Dagguluru</p>
     <div class="splash-loader"></div>
   </div>
 
-  <!-- ===== MAIN APP ===== -->
   <main id="hmApp" class="hm-app hidden">
-
-    <!-- Header -->
     <header class="app-header">
       <button id="backBtn" class="icon-btn hidden" aria-label="Back">←</button>
       <h1 id="pageTitle" class="app-title">Headmaster</h1>
       <button id="themeBtn" class="icon-btn" aria-label="Theme">🌙</button>
     </header>
 
-    <!-- ========== SCREEN 1: SETUP ========== -->
+    <!-- SETUP -->
     <section id="screenSetup" class="screen hidden">
       <div class="card">
         <h2 class="card-title">🏫 పాఠశాల సెటప్</h2>
         <p class="card-desc">మొదటిసారి మాత్రమే. అన్ని వివరాలు ఖచ్చితంగా నింపండి.</p>
-
         <form id="setupForm" class="form" novalidate>
-          <div class="field">
-            <label for="setupDistrict">జిల్లా</label>
-            <input type="text" id="setupDistrict" required autocomplete="off" />
-          </div>
-          <div class="field">
-            <label for="setupMandal">మండలం</label>
-            <input type="text" id="setupMandal" required autocomplete="off" />
-          </div>
-          <div class="field">
-            <label for="setupVillage">గ్రామం</label>
-            <input type="text" id="setupVillage" required autocomplete="off" />
-          </div>
-          <div class="field">
-            <label for="setupSchool">పాఠశాల పేరు</label>
-            <input type="text" id="setupSchool" required autocomplete="off" />
-          </div>
-          <div class="field">
-            <label for="setupHmName">హెడ్‌మాస్టర్ పేరు</label>
-            <input type="text" id="setupHmName" required autocomplete="off" />
-          </div>
-
+          <div class="field"><label for="setupDistrict">జిల్లా</label><input type="text" id="setupDistrict" required autocomplete="off" /></div>
+          <div class="field"><label for="setupMandal">మండలం</label><input type="text" id="setupMandal" required autocomplete="off" /></div>
+          <div class="field"><label for="setupVillage">గ్రామం</label><input type="text" id="setupVillage" required autocomplete="off" /></div>
+          <div class="field"><label for="setupSchool">పాఠశాల పేరు</label><input type="text" id="setupSchool" required autocomplete="off" /></div>
+          <div class="field"><label for="setupHmName">హెడ్‌మాస్టర్ పేరు</label><input type="text" id="setupHmName" required autocomplete="off" /></div>
           <div class="field">
             <label for="setupValiassCode">Valiass Setup Code</label>
             <input type="password" id="setupValiassCode" required autocomplete="off" inputmode="text" />
             <small class="field-hint">5 ఫీల్డ్స్ చివరి అక్షరం + @533340</small>
           </div>
-
           <div class="field">
             <label for="setupHmPin">HM PIN (4 అంకెలు)</label>
             <div class="pin-wrap">
@@ -74,7 +53,6 @@
             </div>
             <div id="setupPinDots" class="pin-dots" aria-hidden="true"></div>
           </div>
-
           <div class="field">
             <label for="setupHmPinConfirm">HM PIN నిర్ధారించండి</label>
             <div class="pin-wrap">
@@ -82,23 +60,18 @@
               <button type="button" class="pin-toggle" data-target="setupHmPinConfirm" aria-label="Show PIN">👁</button>
             </div>
           </div>
-
           <p id="setupError" class="form-error hidden" role="alert"></p>
-
-          <button type="submit" id="setupSubmitBtn" class="btn btn-primary btn-block">
-            సెటప్ పూర్తి చేయండి
-          </button>
+          <button type="submit" id="setupSubmitBtn" class="btn btn-primary btn-block">సెటప్ పూర్తి చేయండి</button>
         </form>
       </div>
     </section>
 
-    <!-- ========== SCREEN 2: LOGIN ========== -->
+    <!-- LOGIN -->
     <section id="screenLogin" class="screen hidden">
       <div class="card card-center">
         <div class="login-icon">🔐</div>
         <h2 class="card-title">హెడ్‌మాస్టర్ లాగిన్</h2>
         <p id="loginSchoolName" class="card-desc"></p>
-
         <form id="loginForm" class="form" novalidate>
           <div class="field">
             <label for="loginPin">HM PIN</label>
@@ -107,36 +80,21 @@
               <button type="button" class="pin-toggle" data-target="loginPin" aria-label="Show PIN">👁</button>
             </div>
           </div>
-
-          <!-- 5-Dot Security Indicator -->
           <div id="loginDots" class="pin-dots pin-dots-lg" aria-label="PIN attempts">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
           </div>
           <p id="loginLockMsg" class="form-error hidden" role="alert"></p>
-
-          <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block">
-            లాగిన్
-          </button>
+          <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block">లాగిన్</button>
         </form>
-
-        <button type="button" id="forgotPinBtn" class="link-btn">
-          PIN మర్చిపోయారా?
-        </button>
+        <button type="button" id="forgotPinBtn" class="link-btn">PIN మర్చిపోయారా?</button>
       </div>
     </section>
 
-    <!-- ========== SCREEN 3: RESET PIN ========== -->
+    <!-- RESET -->
     <section id="screenReset" class="screen hidden">
       <div class="card">
         <h2 class="card-title">🔑 PIN రీసెట్</h2>
-        <p class="card-desc">
-          రీసెట్ కోడ్ కోసం Valiass టీమ్‌ను సంప్రదించండి.
-        </p>
-
+        <p class="card-desc">రీసెట్ కోడ్ కోసం Valiass టీమ్‌ను సంప్రదించండి.</p>
         <form id="resetForm" class="form" novalidate>
           <div class="field">
             <label for="resetCode">HM Reset Code</label>
@@ -156,31 +114,22 @@
               <button type="button" class="pin-toggle" data-target="resetNewPinConfirm" aria-label="Show PIN">👁</button>
             </div>
           </div>
-
           <p id="resetError" class="form-error hidden" role="alert"></p>
-
-          <button type="submit" id="resetSubmitBtn" class="btn btn-primary btn-block">
-            PIN రీసెట్ చేయండి
-          </button>
+          <button type="submit" id="resetSubmitBtn" class="btn btn-primary btn-block">PIN రీసెట్ చేయండి</button>
         </form>
-
-        <button type="button" id="resetBackBtn" class="link-btn">
-          ← లాగిన్‌కి తిరిగి
-        </button>
+        <button type="button" id="resetBackBtn" class="link-btn">← లాగిన్‌కి తిరిగి</button>
       </div>
     </section>
-
   </main>
 
-  <!-- ===== TOAST CONTAINER ===== -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- ===== FIREBASE SDK ===== -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
-  <!-- ===== MODULAR JS ===== -->
+  <!-- Modular JS -->
   <script src="js/config.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/auth.js"></script>
