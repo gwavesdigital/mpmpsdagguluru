@@ -1007,3 +1007,214 @@ input:checked + .slider:before {
   color: #94A3B8;
   opacity: 0.7;
 }
+/* =========================================
+   20. BEAUTIFUL BACK BUTTON & LOGOUT ICON
+   ========================================= */
+
+/* ✅ Back Button — Beautiful Circle */
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--border-color);
+  color: var(--primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-right: var(--space-sm);
+}
+
+.back-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateX(-3px);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+  border-color: var(--primary);
+}
+
+.back-btn:active {
+  transform: translateX(-1px) scale(0.95);
+}
+
+.back-btn i {
+  transition: transform 0.2s ease;
+}
+
+.back-btn:hover i {
+  transform: translateX(-2px);
+}
+
+/* ✅ Logout Button — Beautiful Red Circle */
+.logout-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+  border: 1.5px solid #EF9A9A;
+  color: var(--danger);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(211, 47, 47, 0.15);
+  margin-left: var(--space-sm);
+}
+
+.logout-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  transform: scale(1.08) rotate(-5deg);
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4);
+  border-color: var(--danger);
+}
+
+.logout-btn:active {
+  transform: scale(0.95);
+}
+
+.logout-btn i {
+  transition: transform 0.2s ease;
+}
+
+.logout-btn:hover i {
+  transform: translateX(2px);
+}
+
+/* ✅ Theme Button — Subtle Circle */
+.theme-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.theme-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: rotate(20deg) scale(1.05);
+  box-shadow: 0 4px 12px rgba(27, 94, 32, 0.25);
+  border-color: var(--primary);
+}
+
+.theme-btn:active {
+  transform: scale(0.95);
+}
+
+/* ✅ Header alignment */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.header-left-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.header-right-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* ✅ Footer — Home page తో సమానంగా అన్ని పేజీల్లో */
+.app-footer {
+  text-align: center;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+  width: 100%;
+}
+
+.valiass-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.valiass-link:hover,
+.valiass-link:active {
+  background: rgba(27, 94, 32, 0.12);
+  color: var(--primary-light);
+}
+
+/* Dark mode footer */
+[data-theme="dark"] .app-footer {
+  background: var(--surface);
+  border-top-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .valiass-link:hover {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+/* ✅ HM App — Footer కింద ఉండేలా flex */
+.hm-app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hm-app .screen {
+  flex: 1;
+}
+
+/* ✅ PIN Placeholder — Transparent Hint */
+.pin-wrap input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.55;
+  font-size: 0.85rem;
+  letter-spacing: normal;
+  font-weight: 400;
+  text-align: center;
+  font-style: italic;
+}
+
+.pin-wrap input:focus::placeholder {
+  opacity: 0.3;
+}
+
+[data-theme="dark"] .pin-wrap input::placeholder {
+  color: #94A3B8;
+  opacity: 0.65;
+}
+
+/* ✅ PIN Hint text (below box — optional) */
+.pin-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: var(--space-sm);
+  font-weight: 500;
+  line-height: 1.4;
+}
